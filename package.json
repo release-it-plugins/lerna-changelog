@@ -2,16 +2,13 @@
   "name": "release-it-lerna-changelog",
   "version": "1.0.0",
   "description": "release-it plugin for lerna-changelog ",
-  "main": "index.js",
   "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
-  "author": "Robert Jackson <me@rwjblue.com>",
   "license": "MIT",
-  "engines": {
-    "node": ">= 8"
-  },
+  "author": "Robert Jackson <me@rwjblue.com>",
   "files": [
     "index.js"
   ],
+  "main": "index.js",
   "scripts": {
     "lint:js": "eslint .",
     "test": "ava"
@@ -30,6 +27,12 @@
     "sinon": "^7.3.2",
     "tmp": "^0.1.0"
   },
+  "engines": {
+    "node": ">= 8"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "release-it": {
     "plugins": {
       "./index.js": {
@@ -39,8 +42,5 @@
     "github": {
       "release": true
     }
-  },
-    "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
   }
 }
