@@ -9,6 +9,9 @@
   "engines": {
     "node": ">= 8"
   },
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "lint:js": "eslint .",
     "test": "ava"
