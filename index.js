@@ -36,9 +36,8 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     });
   }
 
-  async writeChangelog() {
+  async writeChangelog(changelog) {
     const { infile } = this.options;
-    let { changelog } = this.config.getContext();
 
     let hasInfile = false;
     try {
@@ -72,12 +71,22 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async beforeRelease() {
-    const changelog = await this.getChangelog();
+    let changelog = (await this.getChangelog()) || this.config.getContext().changelog || '';
+
     this.debug({ changelog });
-    this.config.setContext({ changelog });
+
+    // remove first two lines to prevent release notes
+    // from including the version number/date (it looks odd
+    // in the Github/Gitlab UIs)
+    let changelogWithoutVersion = changelog
+      .split(EOL)
+      .slice(2)
+      .join(EOL);
+
+    this.config.setContext({ changelog: changelogWithoutVersion });
 
     if (this.options.infile) {
-      await this.writeChangelog();
+      await this.writeChangelog(changelog);
     }
   }
 };
