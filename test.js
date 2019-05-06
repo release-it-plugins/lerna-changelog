@@ -33,6 +33,7 @@ test('it invokes lerna-changelog', async t => {
   await runTasks(plugin);
 
   t.deepEqual(plugin.commands, [
+    [`git rev-parse --verify v1.0.0`, { options: { write: false } }],
     [`${plugin.lernaPath} --next-version=v1.0.1 --from=v1.0.0`, { options: { write: false } }],
   ]);
 });

@@ -9,7 +9,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
   async hasTag(tag) {
     try {
-      await this.exec(`git rev-parse --verify ${tag}`);
+      await this.exec(`git rev-parse --verify ${tag}`, { options: { write: false } });
       return true;
     } catch (e) {
       this.debug(`hasTag(${tag}): ${e}`);
