@@ -38,27 +38,39 @@ test('it invokes lerna-changelog', async t => {
   ]);
 });
 
+test('it sets the changelog without version information onto the config', async t => {
+  let infile = tmp.fileSync().name;
+  let plugin = buildPlugin({ infile });
+
+  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
+
+  await runTasks(plugin);
+
+  const { changelog } = plugin.config.getContext();
+  t.is(changelog, 'The changelog');
+});
+
 test('it writes the changelog to the specified file when it did not exist', async t => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
 
-  plugin.getChangelog = () => Promise.resolve('The changelog');
+  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
 
   await runTasks(plugin);
 
   const changelog = fs.readFileSync(infile);
-  t.is(changelog.toString().trim(), 'The changelog');
+  t.is(changelog.toString().trim(), '## v9.9.9 (2019-01-01)\n\nThe changelog');
 });
 
 test('prepends the changelog to the existing file', async t => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
-  plugin.getChangelog = () => Promise.resolve('The changelog');
+  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
 
   fs.writeFileSync(infile, 'Old contents', { encoding: 'utf8' });
 
   await runTasks(plugin);
 
   const changelog = fs.readFileSync(infile);
-  t.is(changelog.toString().trim(), 'The changelog\n\nOld contents');
+  t.is(changelog.toString().trim(), '## v9.9.9 (2019-01-01)\n\nThe changelog\n\nOld contents');
 });
