@@ -9,5 +9,8 @@
   "dependencies": {
     "lerna-changelog": "^0.8.2",
     "release-it": "^12.0.1"
+  },
+  "devDependencies": {
+    "ava": "^1.4.1"
   }
 }
