@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
   "author": "Robert Jackson <me@rwjblue.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "release-it": "^12.0.1"
+  }
 }
