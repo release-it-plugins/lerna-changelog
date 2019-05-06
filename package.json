@@ -1,6 +1,6 @@
 {
   "name": "release-it-lerna-changelog",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "release-it plugin for lerna-changelog ",
   "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
   "license": "MIT",
