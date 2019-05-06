@@ -7,9 +7,29 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return require.resolve('lerna-changelog/bin/cli');
   }
 
-  getChangelog(_from) {
+  async hasTag(tag) {
+    try {
+      await this.exec(`git rev-parse --verify ${tag}`);
+      return true;
+    } catch (e) {
+      this.debug(`hasTag(${tag}): ${e}`);
+      return false;
+    }
+  }
+
+  async getFirstCommit() {
+    let firstCommit = await this.exec(`git rev-list --max-parents=0 HEAD`);
+
+    return firstCommit;
+  }
+
+  async getChangelog(_from) {
     let { version, latestVersion } = this.config.getContext();
     let from = _from || `v${latestVersion}`;
+
+    if (!(await this.hasTag(from))) {
+      from = await this.getFirstCommit();
+    }
 
     return this.exec(`${this.lernaPath} --next-version=v${version} --from=${from}`, {
       options: { write: false },
@@ -29,14 +49,13 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     }
 
     if (!hasInfile) {
-      // figure out how to generate a full changelog with lerna-changelog
-      let firstCommit = await this.exec(`git rev-list --max-parents=0 HEAD`);
+      let firstCommit = await this.getFirstCommit();
 
       if (firstCommit) {
         changelog = await this.getChangeLog(firstCommit);
         this.debug({ changelog });
       } else {
-        // do something when there is no tag? not sure what our options are...
+        // do something when there is no commit? not sure what our options are...
       }
     }
 
