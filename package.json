@@ -27,6 +27,7 @@
     "eslint-plugin-node": "^9.0.1",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "^1.17.0",
-    "sinon": "^7.3.2"
+    "sinon": "^7.3.2",
+    "tmp": "^0.1.0"
   }
 }
