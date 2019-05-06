@@ -52,7 +52,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
       let firstCommit = await this.getFirstCommit();
 
       if (firstCommit) {
-        changelog = await this.getChangeLog(firstCommit);
+        changelog = await this.getChangelog(firstCommit);
         this.debug({ changelog });
       } else {
         // do something when there is no commit? not sure what our options are...
