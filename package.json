@@ -29,5 +29,15 @@
     "prettier": "^1.17.0",
     "sinon": "^7.3.2",
     "tmp": "^0.1.0"
+  },
+  "release-it": {
+    "plugins": {
+      "./index.js": {
+        "infile": "CHANGELOG.md"
+      }
+    },
+    "github": {
+      "release": true
+    }
   }
 }
