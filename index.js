@@ -1,18 +1,29 @@
 const { EOL } = require('os');
 const fs = require('fs');
 const { Plugin } = require('release-it');
+const { format } = require('release-it/lib/util');
 
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   get lernaPath() {
     return require.resolve('lerna-changelog/bin/cli');
   }
 
+  getTagNameFromVersion(version) {
+    let tagName = this.config.getContext('git.tagName');
+
+    return format(tagName, { version });
+  }
+
   async hasTag(tag) {
     try {
-      await this.exec(`git rev-parse --verify ${tag}`, { options: { write: false } });
+      await this.exec(`git show-ref --tags --quiet --verify -- "refs/tags/${tag}"`, {
+        options: { write: false },
+      });
+
       return true;
     } catch (e) {
       this.debug(`hasTag(${tag}): ${e}`);
+
       return false;
     }
   }
@@ -25,13 +36,14 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
   async getChangelog(_from) {
     let { version, latestVersion } = this.config.getContext();
-    let from = _from || `v${latestVersion}`;
+    let from = _from || this.getTagNameFromVersion(latestVersion);
+    let nextVersion = this.getTagNameFromVersion(version);
 
     if (!(await this.hasTag(from))) {
       from = await this.getFirstCommit();
     }
 
-    return this.exec(`${this.lernaPath} --next-version=v${version} --from=${from}`, {
+    return this.exec(`${this.lernaPath} --next-version=${nextVersion} --from=${from}`, {
       options: { write: false },
     });
   }
