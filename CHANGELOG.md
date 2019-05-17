@@ -1,3 +1,11 @@
+## v1.0.3 (2019-05-17)
+
+#### :memo: Documentation
+* [#4](https://github.com/rwjblue/release-it-lerna-changelog/pull/4) Add `keywords` for discoverability ([@webpro](https://github.com/webpro))
+
+#### Committers: 1
+- Lars Kappert ([@webpro](https://github.com/webpro))
+
 ## v1.0.2 (2019-05-07)
 
 #### :rocket: Enhancement
