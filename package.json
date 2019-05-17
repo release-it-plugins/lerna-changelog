@@ -5,6 +5,15 @@
   "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
   "license": "MIT",
   "author": "Robert Jackson <me@rwjblue.com>",
+  "keywords": [
+    "release",
+    "release-it",
+    "release-it-plugin",
+    "plugin",
+    "conventional",
+    "changelog",
+    "lerna"
+  ],
   "files": [
     "index.js"
   ],
