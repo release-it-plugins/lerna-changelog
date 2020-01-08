@@ -10,7 +10,6 @@
     "release-it",
     "release-it-plugin",
     "plugin",
-    "conventional",
     "changelog",
     "lerna"
   ],
