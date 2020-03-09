@@ -54,12 +54,21 @@ For example, given the following configuration (in `package.json`):
   "release-it": {
     "plugins": {
       "release-it-lerna-changelog": {
-        "infile": "CHANGELOG.md"
+        "infile": "CHANGELOG.md",
+        "launchEditor": true
       }
     }
   }
 }
 ```
+
+The two options that `release-it-lerna-changelog` is aware of are:
+
+* `infile` -- This represents the filename to put the changelog information into.
+* `launchEditor` -- When set to `true`, `release-it-lerna-changelog` will
+  invoke the `$EDITOR` from your environment passing it the path to a temp file
+  that you can edit to customize the exact changelog contents. When set to a string,
+  that specific editor will be executed (as opposed to leveraging `$EDITOR`).
 
 Each release will run `lerna-changelog` and prepend the results into `CHANGELOG.md`.
 

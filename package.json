@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "lerna-changelog": "^1.0.1",
-    "release-it": "^13.0.2"
+    "release-it": "^13.0.2",
+    "tmp": "^0.1.0"
   },
   "devDependencies": {
     "ava": "^3.5.0",
@@ -32,8 +33,7 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1",
-    "sinon": "^9.0.0",
-    "tmp": "^0.1.0"
+    "sinon": "^9.0.0"
   },
   "engines": {
     "node": ">= 10"
@@ -44,7 +44,8 @@
   "release-it": {
     "plugins": {
       "./index.js": {
-        "infile": "CHANGELOG.md"
+        "infile": "CHANGELOG.md",
+        "launchEditor": "nvim"
       }
     },
     "git": {
