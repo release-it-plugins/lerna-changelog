@@ -25,6 +25,7 @@
     "serial": true
   },
   "dependencies": {
+    "execa": "^4.0.0",
     "lerna-changelog": "^1.0.1",
     "release-it": "^13.0.2",
     "tmp": "^0.1.0"

@@ -17,6 +17,22 @@ function resetEDITOR() {
   }
 }
 
+async function buildEditorCommand() {
+  let editor = tmp.fileSync().name;
+  let output = tmp.fileSync().name;
+
+  let fakeCommand = `#!${process.execPath}
+'use strict';
+const fs = require('fs');
+
+fs.writeFileSync('${output}', \`args: \${process.argv.slice(2).join(' ')}\`, 'utf-8');
+`;
+
+  await fs.writeFileSync(editor, fakeCommand, { encoding: 'utf-8' });
+
+  return { editor: `${process.execPath} ${editor}`, output };
+}
+
 class TestPlugin extends Plugin {
   constructor() {
     super(...arguments);
@@ -105,31 +121,27 @@ test('prepends the changelog to the existing file', async t => {
 test('uses launchEditor command', async t => {
   let infile = tmp.fileSync().name;
 
-  let plugin = buildPlugin({ infile, launchEditor: 'foo-editor -w ${file}' });
+  let { editor, output } = await buildEditorCommand();
+
+  let plugin = buildPlugin({ infile, launchEditor: `${editor} \${file}` });
 
   await runTasks(plugin);
 
-  t.deepEqual(plugin.commands, [
-    [`git show-ref --tags --quiet --verify -- "refs/tags/1.0.0"`, { write: false }],
-    [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
-    [`foo-editor -w ${plugin.launchedTmpFile}`, {}],
-  ]);
+  t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
 });
 
 test('detects default editor if launchEditor is `true`', async t => {
   let infile = tmp.fileSync().name;
 
+  let { editor, output } = await buildEditorCommand();
+
   let plugin = buildPlugin({ infile, launchEditor: true });
 
   try {
-    process.env.EDITOR = 'foo-editor -w';
+    process.env.EDITOR = editor;
     await runTasks(plugin);
 
-    t.deepEqual(plugin.commands, [
-      [`git show-ref --tags --quiet --verify -- "refs/tags/1.0.0"`, { write: false }],
-      [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
-      [`foo-editor -w ${plugin.launchedTmpFile}`, {}],
-    ]);
+    t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
   } finally {
     resetEDITOR();
   }
