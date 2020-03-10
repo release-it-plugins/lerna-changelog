@@ -2,9 +2,6 @@
   "name": "release-it-lerna-changelog",
   "version": "1.0.3",
   "description": "release-it plugin for lerna-changelog ",
-  "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
-  "license": "MIT",
-  "author": "Robert Jackson <me@rwjblue.com>",
   "keywords": [
     "release",
     "release-it",
@@ -13,10 +10,13 @@
     "changelog",
     "lerna"
   ],
+  "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
+  "license": "MIT",
+  "author": "Robert Jackson <me@rwjblue.com>",
+  "main": "index.js",
   "files": [
     "index.js"
   ],
-  "main": "index.js",
   "scripts": {
     "lint:js": "eslint .",
     "test": "ava"
