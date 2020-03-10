@@ -54,12 +54,34 @@ For example, given the following configuration (in `package.json`):
   "release-it": {
     "plugins": {
       "release-it-lerna-changelog": {
-        "infile": "CHANGELOG.md"
+        "infile": "CHANGELOG.md",
+        "launchEditor": true
       }
     }
   }
 }
 ```
+
+The two options that `release-it-lerna-changelog` is aware of are:
+
+### `infile`
+
+`infile` represents the file to prepend the generated changelog into.
+
+### `launchEditor`
+
+When specified, `release-it-lerna-changelog` will generate the changelog
+then launch the configured editor with a temporary file. This allows the person
+doing the release to customize the changelog before continuing.
+
+There are a few valid values for `launchEditor`:
+
+* `false` - Disables the feature.
+* `true` - The `process.env.EDITOR` value will be used as the command, and the
+  temporary file for editing is added as a argument (i.e. `$EDITOR /some/tmp/file`).
+* any string - This string will be used as if it were a command. In order to
+  interpolate the temporary file path in the string, you can use `${file}` in
+  your configuration.
 
 Each release will run `lerna-changelog` and prepend the results into `CHANGELOG.md`.
 

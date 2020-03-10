@@ -2,6 +2,7 @@ const { EOL } = require('os');
 const fs = require('fs');
 const { Plugin } = require('release-it');
 const { format } = require('release-it/lib/util');
+const tmp = require('tmp');
 
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   get lernaPath() {
@@ -34,6 +35,17 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return firstCommit;
   }
 
+  async _execLernaChangelog(from, nextVersion) {
+    let changelog = await this.exec(
+      `${this.lernaPath} --next-version=${nextVersion} --from=${from}`,
+      {
+        options: { write: false },
+      }
+    );
+
+    return changelog;
+  }
+
   async getChangelog(_from) {
     let { version, latestVersion } = this.config.getContext();
     let from = _from || this.getTagNameFromVersion(latestVersion);
@@ -43,9 +55,49 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
       from = await this.getFirstCommit();
     }
 
-    return this.exec(`${this.lernaPath} --next-version=${nextVersion} --from=${from}`, {
-      options: { write: false },
-    });
+    let changelog = await this._execLernaChangelog(from, nextVersion);
+
+    let finalChangelog = await this.reviewChangelog(changelog);
+
+    return finalChangelog;
+  }
+
+  async _launchEditor(tmpFile) {
+    let editorCommand;
+
+    if (typeof this.options.launchEditor === 'boolean') {
+      let EDITOR = process.env.EDITOR;
+      if (!EDITOR) {
+        let error = new Error(
+          `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+        );
+        this.log.error(error.message);
+
+        throw error;
+      }
+
+      // `${file}` is actually interpolated by `this.exec`
+      editorCommand = EDITOR + ' ${file}';
+    } else {
+      editorCommand = this.options.launchEditor;
+    }
+
+    await this.exec(editorCommand, { context: { file: tmpFile } });
+  }
+
+  async reviewChangelog(changelog) {
+    if (!this.options.launchEditor) {
+      return changelog;
+    }
+
+    let tmpFile = tmp.fileSync().name;
+    fs.writeFileSync(tmpFile, changelog, { encoding: 'utf-8' });
+
+    await this._launchEditor(tmpFile);
+
+    let finalChangelog = fs.readFileSync(tmpFile, { encoding: 'utf-8' });
+
+    return finalChangelog;
   }
 
   async writeChangelog(changelog) {
