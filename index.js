@@ -3,6 +3,7 @@ const fs = require('fs');
 const { Plugin } = require('release-it');
 const { format } = require('release-it/lib/util');
 const tmp = require('tmp');
+const execa = require('execa');
 
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   get lernaPath() {
@@ -76,13 +77,15 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
         throw error;
       }
 
-      // `${file}` is actually interpolated by `this.exec`
+      // `${file}` is interpolated just below
       editorCommand = EDITOR + ' ${file}';
     } else {
       editorCommand = this.options.launchEditor;
     }
 
-    await this.exec(editorCommand, { context: { file: tmpFile } });
+    editorCommand = editorCommand.replace('${file}', tmpFile);
+
+    await execa.command(editorCommand, { stdio: 'inherit' });
   }
 
   async reviewChangelog(changelog) {
