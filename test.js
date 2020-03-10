@@ -3,14 +3,18 @@ const tmp = require('tmp');
 const test = require('ava');
 const { factory, runTasks } = require('release-it/test/util');
 const Plugin = require('./index');
-const EDITOR = process.env.EDITOR;
+const EDITOR = process.env.EDITOR || null;
 
 tmp.setGracefulCleanup();
 
 const namespace = 'release-it-lerna-changelog';
 
 function resetEDITOR() {
-  process.env.EDITOR = EDITOR;
+  if (EDITOR === null) {
+    delete process.env.EDITOR;
+  } else {
+    process.env.EDITOR = EDITOR;
+  }
 }
 
 class TestPlugin extends Plugin {
@@ -115,7 +119,7 @@ test('uses launchEditor command', async t => {
 test('detects default editor if launchEditor is `true`', async t => {
   let infile = tmp.fileSync().name;
 
-  let plugin = buildPlugin({ infile, launchEditor: true }, TestPlugin);
+  let plugin = buildPlugin({ infile, launchEditor: true });
 
   try {
     process.env.EDITOR = 'foo-editor -w';
@@ -126,6 +130,30 @@ test('detects default editor if launchEditor is `true`', async t => {
       [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
       [`foo-editor -w ${plugin.launchedTmpFile}`, {}],
     ]);
+  } finally {
+    resetEDITOR();
+  }
+});
+
+test('throws if launchEditor is `true` and no $EDITOR present', async t => {
+  let infile = tmp.fileSync().name;
+
+  let plugin = buildPlugin({ infile, launchEditor: true });
+
+  try {
+    delete process.env.EDITOR;
+
+    await runTasks(plugin);
+  } catch (error) {
+    t.deepEqual(plugin.commands, [
+      [`git show-ref --tags --quiet --verify -- "refs/tags/1.0.0"`, { write: false }],
+      [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
+    ]);
+
+    t.is(
+      error.message,
+      `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+    );
   } finally {
     resetEDITOR();
   }

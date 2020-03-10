@@ -21,6 +21,9 @@
     "lint:js": "eslint .",
     "test": "ava"
   },
+  "ava": {
+    "serial": true
+  },
   "dependencies": {
     "lerna-changelog": "^1.0.1",
     "release-it": "^13.0.2",

@@ -35,7 +35,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return firstCommit;
   }
 
-  async _execLernaChangelog(nextVersion, from) {
+  async _execLernaChangelog(from, nextVersion) {
     let changelog = await this.exec(
       `${this.lernaPath} --next-version=${nextVersion} --from=${from}`,
       {
@@ -55,7 +55,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
       from = await this.getFirstCommit();
     }
 
-    let changelog = await this._execLernaChangelog(nextVersion, from);
+    let changelog = await this._execLernaChangelog(from, nextVersion);
 
     let finalChangelog = await this.reviewChangelog(changelog);
 
@@ -66,8 +66,18 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     let editorCommand;
 
     if (typeof this.options.launchEditor === 'boolean') {
+      let EDITOR = process.env.EDITOR;
+      if (!EDITOR) {
+        let error = new Error(
+          `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+        );
+        this.log.error(error.message);
+
+        throw error;
+      }
+
       // `${file}` is actually interpolated by `this.exec`
-      editorCommand = process.env.EDITOR + ' ${file}';
+      editorCommand = EDITOR + ' ${file}';
     } else {
       editorCommand = this.options.launchEditor;
     }
