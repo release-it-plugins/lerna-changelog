@@ -48,7 +48,7 @@
     "plugins": {
       "./index.js": {
         "infile": "CHANGELOG.md",
-        "launchEditor": "nvim"
+        "launchEditor": true
       }
     },
     "git": {
