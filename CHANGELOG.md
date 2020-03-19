@@ -1,3 +1,13 @@
+## v2.1.0 (2020-03-19)
+
+#### :rocket: Enhancement
+* [#12](https://github.com/rwjblue/release-it-lerna-changelog/pull/12) Show lerna-changelog output _before_ version prompt. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.0.0 (2020-03-10)
 
 #### :boom: Breaking Change
