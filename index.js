@@ -5,9 +5,25 @@ const { format } = require('release-it/lib/util');
 const tmp = require('tmp');
 const execa = require('execa');
 
+const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
+
+// using a const here, because we may need to change this value in the future
+// and this makes it much simpler
+const UNRELEASED = 'Unreleased';
+
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
-  get lernaPath() {
-    return require.resolve('lerna-changelog/bin/cli');
+  async init() {
+    let from = (await this.getTagForHEAD()) || (await this.getFirstCommit());
+    let changelog = await this._execLernaChangelog(from);
+
+    this.setContext({ changelog });
+  }
+
+  get nextVersion() {
+    let { version } = this.config.getContext();
+    let nextVersion = this.getTagNameFromVersion(version);
+
+    return nextVersion;
   }
 
   getTagNameFromVersion(version) {
@@ -16,47 +32,34 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return format(tagName, { version });
   }
 
-  async hasTag(tag) {
-    try {
-      await this.exec(`git show-ref --tags --quiet --verify -- "refs/tags/${tag}"`, {
-        options: { write: false },
-      });
+  async getTagForHEAD() {
+    let tag = await this.exec('git describe --tags --abbrev=0', { options: { write: false } });
 
-      return true;
-    } catch (e) {
-      this.debug(`hasTag(${tag}): ${e}`);
-
-      return false;
-    }
+    return tag;
   }
 
   async getFirstCommit() {
-    let firstCommit = await this.exec(`git rev-list --max-parents=0 HEAD`);
+    if (this._firstCommit) {
+      return this._firstCommit;
+    }
 
-    return firstCommit;
+    this._firstCommit = await this.exec(`git rev-list --max-parents=0 HEAD`, {
+      options: { write: false },
+    });
+
+    return this._firstCommit;
   }
 
-  async _execLernaChangelog(from, nextVersion) {
-    let changelog = await this.exec(
-      `${this.lernaPath} --next-version=${nextVersion} --from=${from}`,
-      {
-        options: { write: false },
-      }
-    );
+  async _execLernaChangelog(from) {
+    let changelog = await this.exec(`${LERNA_PATH} --next-version=${UNRELEASED} --from=${from}`, {
+      options: { write: false },
+    });
 
     return changelog;
   }
 
-  async getChangelog(_from) {
-    let { version, latestVersion } = this.config.getContext();
-    let from = _from || this.getTagNameFromVersion(latestVersion);
-    let nextVersion = this.getTagNameFromVersion(version);
-
-    if (!(await this.hasTag(from))) {
-      from = await this.getFirstCommit();
-    }
-
-    let changelog = await this._execLernaChangelog(from, nextVersion);
+  async processChangelog(_changelog) {
+    let changelog = _changelog.replace(UNRELEASED, this.nextVersion);
 
     let finalChangelog = await this.reviewChangelog(changelog);
 
@@ -115,10 +118,13 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     }
 
     if (!hasInfile) {
+      // generate an initial CHANGELOG.md with all of the versions
       let firstCommit = await this.getFirstCommit();
 
       if (firstCommit) {
-        changelog = await this.getChangelog(firstCommit);
+        changelog = await this._execLernaChangelog(firstCommit, this.nextVersion);
+        changelog = changelog.replace(UNRELEASED, this.nextVersion);
+
         this.debug({ changelog });
       } else {
         // do something when there is no commit? not sure what our options are...
@@ -138,14 +144,16 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async beforeRelease() {
-    let changelog = (await this.getChangelog()) || this.config.getContext().changelog || '';
+    // this is populated in `init`
+    let changelog = this.getContext('changelog') || '';
+    let processedChangelog = await this.processChangelog(changelog);
 
-    this.debug({ changelog });
+    this.debug({ changelog: processedChangelog });
 
     // remove first two lines to prevent release notes
     // from including the version number/date (it looks odd
     // in the Github/Gitlab UIs)
-    let changelogWithoutVersion = changelog
+    let changelogWithoutVersion = processedChangelog
       .split(EOL)
       .slice(2)
       .join(EOL);
@@ -153,7 +161,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     this.config.setContext({ changelog: changelogWithoutVersion });
 
     if (this.options.infile) {
-      await this.writeChangelog(changelog);
+      await this.writeChangelog(processedChangelog);
     }
   }
 };
