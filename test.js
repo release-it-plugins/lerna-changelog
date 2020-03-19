@@ -7,6 +7,7 @@ const EDITOR = process.env.EDITOR || null;
 
 tmp.setGracefulCleanup();
 
+const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 const namespace = 'release-it-lerna-changelog';
 
 function resetEDITOR() {
@@ -37,9 +38,19 @@ class TestPlugin extends Plugin {
   constructor() {
     super(...arguments);
 
+    this.responses = {
+      // always assume v1.0.0 unless specifically overridden
+      'git describe --tags --abbrev=0': 'v1.0.0',
+
+      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]: '### Unreleased (2020-03-18)\n\nThe changelog',
+    };
+
     this.commands = [];
     this.shell.execFormattedCommand = async (command, options) => {
       this.commands.push([command, options]);
+      if (this.responses[command]) {
+        return Promise.resolve(this.responses[command]);
+      }
     };
   }
 
@@ -63,8 +74,8 @@ test('it invokes lerna-changelog', async t => {
   await runTasks(plugin);
 
   t.deepEqual(plugin.commands, [
-    [`git show-ref --tags --quiet --verify -- "refs/tags/1.0.0"`, { write: false }],
-    [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
+    ['git describe --tags --abbrev=0', { write: false }],
+    [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
   ]);
 });
 
@@ -76,16 +87,14 @@ test('it honors custom git.tagName formatting', async t => {
   await runTasks(plugin);
 
   t.deepEqual(plugin.commands, [
-    [`git show-ref --tags --quiet --verify -- "refs/tags/v1.0.0"`, { write: false }],
-    [`${plugin.lernaPath} --next-version=v1.0.1 --from=v1.0.0`, { write: false }],
+    ['git describe --tags --abbrev=0', { write: false }],
+    [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
   ]);
 });
 
 test('it sets the changelog without version information onto the config', async t => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
-
-  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
 
   await runTasks(plugin);
 
@@ -95,27 +104,41 @@ test('it sets the changelog without version information onto the config', async 
 
 test('it writes the changelog to the specified file when it did not exist', async t => {
   let infile = tmp.fileSync().name;
-  let plugin = buildPlugin({ infile });
+  fs.unlinkSync(infile);
 
-  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
+  let plugin = buildPlugin({ infile });
+  plugin.config.setContext({ git: { tagName: 'v${version}' } });
+
+  Object.assign(plugin.responses, {
+    'git rev-list --max-parents=0 HEAD': 'aabc',
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `### Unreleased\n\nThe changelog\n### v1.0.0\n\nThe old changelog`,
+  });
 
   await runTasks(plugin);
 
-  const changelog = fs.readFileSync(infile);
-  t.is(changelog.toString().trim(), '## v9.9.9 (2019-01-01)\n\nThe changelog');
+  t.deepEqual(plugin.commands, [
+    ['git describe --tags --abbrev=0', { write: false }],
+    [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
+    ['git rev-list --max-parents=0 HEAD', { write: false }],
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
+    [`git add ${infile}`, {}],
+  ]);
+
+  const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+  t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
 });
 
 test('prepends the changelog to the existing file', async t => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
-  plugin.getChangelog = () => Promise.resolve('## v9.9.9 (2019-01-01)\n\nThe changelog');
+  plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
   fs.writeFileSync(infile, 'Old contents', { encoding: 'utf8' });
 
   await runTasks(plugin);
 
   const changelog = fs.readFileSync(infile);
-  t.is(changelog.toString().trim(), '## v9.9.9 (2019-01-01)\n\nThe changelog\n\nOld contents');
+  t.is(changelog.toString().trim(), '### v1.0.1 (2020-03-18)\n\nThe changelog\n\nOld contents');
 });
 
 test('uses launchEditor command', async t => {
@@ -158,8 +181,8 @@ test('throws if launchEditor is `true` and no $EDITOR present', async t => {
     await runTasks(plugin);
   } catch (error) {
     t.deepEqual(plugin.commands, [
-      [`git show-ref --tags --quiet --verify -- "refs/tags/1.0.0"`, { write: false }],
-      [`${plugin.lernaPath} --next-version=1.0.1 --from=1.0.0`, { write: false }],
+      ['git describe --tags --abbrev=0', { write: false }],
+      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
     ]);
 
     t.is(
@@ -172,33 +195,30 @@ test('throws if launchEditor is `true` and no $EDITOR present', async t => {
 });
 
 test('launches configured editor, updates infile, and propogates changes to context', async t => {
-  class TestPlugin extends Plugin {
-    constructor() {
-      super(...arguments);
+  let fakeEditorFile = tmp.fileSync().name;
+  // using a function here so it is easier to author (vs a giant string interpolation)
+  function fakeEditor() {
+    let fs = require('fs');
+    let fileName = process.argv[2];
 
-      this.commands = [];
-    }
-
-    async _execLernaChangelog() {
-      return '## v9.9.9 (2019-01-01)\n\nThe changelog';
-    }
-
-    async _launchEditor(tmpFile) {
-      let originalChangelog = await this._execLernaChangelog();
-
-      fs.writeFileSync(tmpFile, originalChangelog + '\nExtra stuff!', { encoding: 'utf-8' });
-    }
+    let contents = fs.readFileSync(fileName, { encoding: 'utf8' });
+    fs.writeFileSync(fileName, `${contents}\nExtra stuff!`, { encoding: 'utf8' });
   }
+  fs.writeFileSync(fakeEditorFile, `${fakeEditor.toString()}\nfakeEditor();`, { encoding: 'utf8' });
 
   let infile = tmp.fileSync().name;
-  let plugin = buildPlugin({ infile, launchEditor: 'foo-editor -w ${file}' }, TestPlugin);
+  let plugin = buildPlugin({
+    infile,
+    launchEditor: `${process.execPath} ${fakeEditorFile} \${file}`,
+  });
+  plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
   await runTasks(plugin);
 
   const changelogFileContents = fs.readFileSync(infile);
   t.is(
     changelogFileContents.toString().trim(),
-    '## v9.9.9 (2019-01-01)\n\nThe changelog\nExtra stuff!'
+    '### v1.0.1 (2020-03-18)\n\nThe changelog\nExtra stuff!'
   );
 
   const { changelog } = plugin.config.getContext();
