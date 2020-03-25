@@ -49,7 +49,13 @@ class TestPlugin extends Plugin {
     this.shell.execFormattedCommand = async (command, options) => {
       this.commands.push([command, options]);
       if (this.responses[command]) {
-        return Promise.resolve(this.responses[command]);
+        let response = this.responses[command];
+
+        if (typeof response === 'string') {
+          return Promise.resolve(response);
+        } else if (typeof response === 'object' && response !== null && response.reject === true) {
+          return Promise.reject(response.value);
+        }
       }
     };
   }
@@ -100,6 +106,33 @@ test('it sets the changelog without version information onto the config', async 
 
   const { changelog } = plugin.config.getContext();
   t.is(changelog, 'The changelog');
+});
+
+test('it uses the first commit when no tags exist', async t => {
+  let infile = tmp.fileSync().name;
+
+  let plugin = buildPlugin({ infile });
+  plugin.config.setContext({ git: { tagName: 'v${version}' } });
+
+  Object.assign(plugin.responses, {
+    'git describe --tags --abbrev=0': {
+      reject: true,
+      value: 'hahahahaah, does not exist',
+    },
+    'git rev-list --max-parents=0 HEAD': 'aabc',
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `### Unreleased\n\nThe changelog\n### v1.0.0\n\nThe old changelog`,
+  });
+
+  await runTasks(plugin);
+
+  t.deepEqual(plugin.commands, [
+    ['git describe --tags --abbrev=0', { write: false }],
+    ['git rev-list --max-parents=0 HEAD', { write: false }],
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
+  ]);
+
+  const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+  t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
 });
 
 test('it writes the changelog to the specified file when it did not exist', async t => {
