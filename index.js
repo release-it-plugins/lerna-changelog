@@ -33,9 +33,11 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async getTagForHEAD() {
-    let tag = await this.exec('git describe --tags --abbrev=0', { options: { write: false } });
-
-    return tag;
+    try {
+      return await this.exec('git describe --tags --abbrev=0', { options: { write: false } });
+    } catch (error) {
+      return null;
+    }
   }
 
   async getFirstCommit() {
