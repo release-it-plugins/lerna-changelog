@@ -160,10 +160,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     // remove first two lines to prevent release notes
     // from including the version number/date (it looks odd
     // in the Github/Gitlab UIs)
-    let changelogWithoutVersion = processedChangelog
-      .split(EOL)
-      .slice(2)
-      .join(EOL);
+    let changelogWithoutVersion = processedChangelog.split(EOL).slice(2).join(EOL);
 
     this.config.setContext({ changelog: changelogWithoutVersion });
 
