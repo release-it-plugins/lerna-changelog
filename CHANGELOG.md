@@ -1,3 +1,13 @@
+## v2.1.1 (2020-03-25)
+
+#### :bug: Bug Fix
+* [#19](https://github.com/rwjblue/release-it-lerna-changelog/pull/19) Prevent error when no tags exist. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.1.0 (2020-03-19)
 
 #### :rocket: Enhancement
