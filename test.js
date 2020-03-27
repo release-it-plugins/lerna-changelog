@@ -74,7 +74,7 @@ function buildPlugin(config = {}, _Plugin = TestPlugin) {
   return plugin;
 }
 
-test('it invokes lerna-changelog', async t => {
+test('it invokes lerna-changelog', async (t) => {
   let plugin = buildPlugin();
 
   await runTasks(plugin);
@@ -85,7 +85,7 @@ test('it invokes lerna-changelog', async t => {
   ]);
 });
 
-test('it honors custom git.tagName formatting', async t => {
+test('it honors custom git.tagName formatting', async (t) => {
   let plugin = buildPlugin();
 
   plugin.config.setContext({ git: { tagName: 'v${version}' } });
@@ -98,7 +98,7 @@ test('it honors custom git.tagName formatting', async t => {
   ]);
 });
 
-test('it sets the changelog without version information onto the config', async t => {
+test('it sets the changelog without version information onto the config', async (t) => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
 
@@ -108,7 +108,7 @@ test('it sets the changelog without version information onto the config', async 
   t.is(changelog, 'The changelog');
 });
 
-test('it uses the first commit when no tags exist', async t => {
+test('it uses the first commit when no tags exist', async (t) => {
   let infile = tmp.fileSync().name;
 
   let plugin = buildPlugin({ infile });
@@ -135,7 +135,7 @@ test('it uses the first commit when no tags exist', async t => {
   t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
 });
 
-test('it writes the changelog to the specified file when it did not exist', async t => {
+test('it writes the changelog to the specified file when it did not exist', async (t) => {
   let infile = tmp.fileSync().name;
   fs.unlinkSync(infile);
 
@@ -161,7 +161,7 @@ test('it writes the changelog to the specified file when it did not exist', asyn
   t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
 });
 
-test('prepends the changelog to the existing file', async t => {
+test('prepends the changelog to the existing file', async (t) => {
   let infile = tmp.fileSync().name;
   let plugin = buildPlugin({ infile });
   plugin.config.setContext({ git: { tagName: 'v${version}' } });
@@ -174,7 +174,7 @@ test('prepends the changelog to the existing file', async t => {
   t.is(changelog.toString().trim(), '### v1.0.1 (2020-03-18)\n\nThe changelog\n\nOld contents');
 });
 
-test('uses launchEditor command', async t => {
+test('uses launchEditor command', async (t) => {
   let infile = tmp.fileSync().name;
 
   let { editor, output } = await buildEditorCommand();
@@ -186,7 +186,7 @@ test('uses launchEditor command', async t => {
   t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
 });
 
-test('does not launch the editor for dry-run', async t => {
+test('does not launch the editor for dry-run', async (t) => {
   let infile = tmp.fileSync().name;
 
   let { editor, output } = await buildEditorCommand();
@@ -200,7 +200,7 @@ test('does not launch the editor for dry-run', async t => {
   t.is(fs.readFileSync(output, 'utf-8'), ``);
 });
 
-test('detects default editor if launchEditor is `true`', async t => {
+test('detects default editor if launchEditor is `true`', async (t) => {
   let infile = tmp.fileSync().name;
 
   let { editor, output } = await buildEditorCommand();
@@ -217,7 +217,7 @@ test('detects default editor if launchEditor is `true`', async t => {
   }
 });
 
-test('throws if launchEditor is `true` and no $EDITOR present', async t => {
+test('throws if launchEditor is `true` and no $EDITOR present', async (t) => {
   let infile = tmp.fileSync().name;
 
   let plugin = buildPlugin({ infile, launchEditor: true });
@@ -241,7 +241,7 @@ test('throws if launchEditor is `true` and no $EDITOR present', async t => {
   }
 });
 
-test('launches configured editor, updates infile, and propogates changes to context', async t => {
+test('launches configured editor, updates infile, and propogates changes to context', async (t) => {
   let fakeEditorFile = tmp.fileSync().name;
   // using a function here so it is easier to author (vs a giant string interpolation)
   function fakeEditor() {
