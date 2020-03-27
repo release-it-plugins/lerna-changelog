@@ -186,6 +186,20 @@ test('uses launchEditor command', async t => {
   t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
 });
 
+test('does not launch the editor for dry-run', async t => {
+  let infile = tmp.fileSync().name;
+
+  let { editor, output } = await buildEditorCommand();
+
+  let plugin = buildPlugin({ infile, launchEditor: `${editor} \${file}` });
+
+  plugin.global.isDryRun = true;
+
+  await runTasks(plugin);
+
+  t.is(fs.readFileSync(output, 'utf-8'), ``);
+});
+
 test('detects default editor if launchEditor is `true`', async t => {
   let infile = tmp.fileSync().name;
 

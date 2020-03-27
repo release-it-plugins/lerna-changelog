@@ -69,6 +69,11 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async _launchEditor(tmpFile) {
+    // do not launch the editor for dry runs
+    if (this.global.isDryRun) {
+      return;
+    }
+
     let editorCommand;
 
     if (typeof this.options.launchEditor === 'boolean') {
