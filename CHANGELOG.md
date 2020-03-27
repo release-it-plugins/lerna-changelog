@@ -1,3 +1,13 @@
+## v2.1.2 (2020-03-27)
+
+#### :bug: Bug Fix
+* [#22](https://github.com/rwjblue/release-it-lerna-changelog/pull/22) Ensure `--dry-run` does not launch editor. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.1.1 (2020-03-25)
 
 #### :bug: Bug Fix
