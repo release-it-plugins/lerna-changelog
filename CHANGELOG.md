@@ -1,3 +1,16 @@
+## v2.2.0 (2020-04-20)
+
+#### :rocket: Enhancement
+* [#37](https://github.com/rwjblue/release-it-lerna-changelog/pull/37) Use `editor` if present on `$PATH`. ([@rwjblue](https://github.com/rwjblue))
+
+#### :bug: Bug Fix
+* [#38](https://github.com/rwjblue/release-it-lerna-changelog/pull/38) Ensure custom changelog is displayed initially on release-it@13.5.3+. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.1.2 (2020-03-27)
 
 #### :bug: Bug Fix
