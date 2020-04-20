@@ -27,6 +27,18 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return nextVersion;
   }
 
+  getLatestVersion() {
+    // leveraging getLatestVersion so that we can mutate the global contexts
+    // `changelog` _after_ the built in plugin has ran. IMHO, this kinda sucks,
+    // but has the timing semantics needed to work around the changes in
+    // release-it@13.5.3.
+    //
+    // Hopefully a better resolution can be found over in
+    // https://github.com/release-it/release-it/issues/647
+    let { changelog } = this.getContext();
+    this.config.setContext({ changelog });
+  }
+
   getTagNameFromVersion(version) {
     let tagName = this.config.getContext('git.tagName');
 
