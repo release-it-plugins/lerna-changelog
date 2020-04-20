@@ -1,5 +1,6 @@
 const { EOL } = require('os');
 const fs = require('fs');
+const which = require('which');
 const { Plugin } = require('release-it');
 const { format } = require('release-it/lib/util');
 const tmp = require('tmp');
@@ -78,9 +79,14 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
     if (typeof this.options.launchEditor === 'boolean') {
       let EDITOR = process.env.EDITOR;
+
+      if (!EDITOR) {
+        EDITOR = which.sync('editor', { nothrow: true });
+      }
+
       if (!EDITOR) {
         let error = new Error(
-          `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+          `release-it-lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
         );
         this.log.error(error.message);
 
