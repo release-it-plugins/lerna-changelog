@@ -77,8 +77,12 @@ doing the release to customize the changelog before continuing.
 There are a few valid values for `launchEditor`:
 
 * `false` - Disables the feature.
-* `true` - The `process.env.EDITOR` value will be used as the command, and the
-  temporary file for editing is added as a argument (i.e. `$EDITOR /some/tmp/file`).
+* `true` - If present the `process.env.EDITOR` value will be used as the
+  command to invoke, if `process.env.EDITOR` is not found `process.env.PATH`
+  will be searched for a command named `editor` (which is commonly used on
+  Debian / Ubuntu systems to point to the currently configured editor). The
+  temporary file for editing is added as an argument (i.e.
+  `$EDITOR /some/tmp/file`).
 * any string - This string will be used as if it were a command. In order to
   interpolate the temporary file path in the string, you can use `${file}` in
   your configuration.

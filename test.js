@@ -262,7 +262,7 @@ test('throws if launchEditor is `true`, no $EDITOR present, and `editor` is not 
 
     t.is(
       error.message,
-      `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+      `release-it-lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
     );
   } finally {
     resetEDITOR();

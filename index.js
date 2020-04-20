@@ -86,7 +86,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
       if (!EDITOR) {
         let error = new Error(
-          `release-it-lerna-changelog configured to use $EDITOR but no $EDITOR was found`
+          `release-it-lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
         );
         this.log.error(error.message);
 
