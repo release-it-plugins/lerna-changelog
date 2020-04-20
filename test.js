@@ -29,9 +29,10 @@ const fs = require('fs');
 fs.writeFileSync('${output}', \`args: \${process.argv.slice(2).join(' ')}\`, 'utf-8');
 `;
 
-  await fs.writeFileSync(editor, fakeCommand, { encoding: 'utf-8' });
+  fs.writeFileSync(editor, fakeCommand, { encoding: 'utf-8' });
+  fs.chmodSync(editor, 0o777);
 
-  return { editor: `${process.execPath} ${editor}`, output };
+  return { editor, output };
 }
 
 class TestPlugin extends Plugin {
@@ -200,7 +201,7 @@ test('does not launch the editor for dry-run', async (t) => {
   t.is(fs.readFileSync(output, 'utf-8'), ``);
 });
 
-test('detects default editor if launchEditor is `true`', async (t) => {
+test('detects default editor from $EDITOR if launchEditor is `true`', async (t) => {
   let infile = tmp.fileSync().name;
 
   let { editor, output } = await buildEditorCommand();
@@ -217,7 +218,7 @@ test('detects default editor if launchEditor is `true`', async (t) => {
   }
 });
 
-test('throws if launchEditor is `true` and no $EDITOR present', async (t) => {
+test('throws if launchEditor is `true`, no $EDITOR present, and `editor` is not found on $PATH', async (t) => {
   let infile = tmp.fileSync().name;
 
   let plugin = buildPlugin({ infile, launchEditor: true });
