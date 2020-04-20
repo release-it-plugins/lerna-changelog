@@ -252,6 +252,7 @@ test('throws if launchEditor is `true`, no $EDITOR present, and `editor` is not 
 
   try {
     delete process.env.EDITOR;
+    process.env.PATH = '';
 
     await runTasks(plugin);
   } catch (error) {
@@ -266,6 +267,7 @@ test('throws if launchEditor is `true`, no $EDITOR present, and `editor` is not 
     );
   } finally {
     resetEDITOR();
+    resetPATH();
   }
 });
 
