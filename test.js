@@ -1,14 +1,20 @@
 const fs = require('fs');
+const path = require('path');
 const tmp = require('tmp');
 const test = require('ava');
 const { factory, runTasks } = require('release-it/test/util');
 const Plugin = require('./index');
 const EDITOR = process.env.EDITOR || null;
+const PATH = process.env.PATH;
 
 tmp.setGracefulCleanup();
 
 const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 const namespace = 'release-it-lerna-changelog';
+
+function resetPATH() {
+  process.env.PATH = PATH;
+}
 
 function resetEDITOR() {
   if (EDITOR === null) {
@@ -18,8 +24,10 @@ function resetEDITOR() {
   }
 }
 
-async function buildEditorCommand() {
-  let editor = tmp.fileSync().name;
+async function buildEditorCommand(commandName = 'fake-editor') {
+  let tmpdir = tmp.dirSync().name;
+
+  let editor = `${tmpdir}/${commandName}`;
   let output = tmp.fileSync().name;
 
   let fakeCommand = `#!${process.execPath}
@@ -30,7 +38,7 @@ fs.writeFileSync('${output}', \`args: \${process.argv.slice(2).join(' ')}\`, 'ut
 `;
 
   fs.writeFileSync(editor, fakeCommand, { encoding: 'utf-8' });
-  fs.chmodSync(editor, 0o777);
+  fs.chmodSync(editor, 0o755);
 
   return { editor, output };
 }
@@ -214,6 +222,25 @@ test('detects default editor from $EDITOR if launchEditor is `true`', async (t) 
 
     t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
   } finally {
+    resetEDITOR();
+  }
+});
+
+test('detects default editor via `editor` if launchEditor is `true`', async (t) => {
+  let infile = tmp.fileSync().name;
+
+  let { editor, output } = await buildEditorCommand('editor');
+
+  let plugin = buildPlugin({ infile, launchEditor: true });
+
+  try {
+    delete process.env.EDITOR;
+    process.env.PATH = `${path.dirname(editor)}:${process.env.PATH}`;
+    await runTasks(plugin);
+
+    t.is(fs.readFileSync(output, 'utf-8'), `args: ${plugin.launchedTmpFile}`);
+  } finally {
+    resetPATH();
     resetEDITOR();
   }
 });
