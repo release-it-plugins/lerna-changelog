@@ -15,9 +15,10 @@ const UNRELEASED = 'Unreleased';
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   async init() {
     let from = (await this.getTagForHEAD()) || (await this.getFirstCommit());
-    let changelog = await this._execLernaChangelog(from);
+    this.changelog = await this._execLernaChangelog(from);
 
-    this.setContext({ changelog });
+    // this supports release-it < 13.5.3
+    this.setContext({ changelog: this.changelog });
   }
 
   get nextVersion() {
@@ -27,16 +28,9 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return nextVersion;
   }
 
-  getLatestVersion() {
-    // leveraging getLatestVersion so that we can mutate the global contexts
-    // `changelog` _after_ the built in plugin has ran. IMHO, this kinda sucks,
-    // but has the timing semantics needed to work around the changes in
-    // release-it@13.5.3.
-    //
-    // Hopefully a better resolution can be found over in
-    // https://github.com/release-it/release-it/issues/647
-    let { changelog } = this.getContext();
-    this.config.setContext({ changelog });
+  // this hook is supported by release-it@13.5.5+
+  getChangelog() {
+    return this.changelog;
   }
 
   getTagNameFromVersion(version) {
@@ -170,7 +164,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
   async beforeRelease() {
     // this is populated in `init`
-    let changelog = this.getContext('changelog') || '';
+    let changelog = this.changelog || '';
     let processedChangelog = await this.processChangelog(changelog);
 
     this.debug({ changelog: processedChangelog });
