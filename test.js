@@ -95,7 +95,8 @@ test('it invokes lerna-changelog', async (t) => {
 });
 
 test('it honors custom git.tagName formatting', async (t) => {
-  let plugin = buildPlugin();
+  let infile = tmp.fileSync().name;
+  let plugin = buildPlugin({ infile });
 
   plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
@@ -105,6 +106,9 @@ test('it honors custom git.tagName formatting', async (t) => {
     ['git describe --tags --abbrev=0', { write: false }],
     [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
   ]);
+
+  const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+  t.is(changelog, `### v1.0.1 (2020-03-18)\n\nThe changelog\n\n`);
 });
 
 test('it sets the changelog without version information onto the config', async (t) => {
