@@ -23,7 +23,9 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
   get nextVersion() {
     let { version } = this.config.getContext();
-    let nextVersion = this.getTagNameFromVersion(version);
+
+    let tagName = this.config.getContext('git.tagName');
+    let nextVersion = tagName ? format(tagName, { version }) : version;
 
     return nextVersion;
   }
@@ -31,12 +33,6 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   // this hook is supported by release-it@13.5.5+
   getChangelog() {
     return this.changelog;
-  }
-
-  getTagNameFromVersion(version) {
-    let tagName = this.config.getContext('git.tagName');
-
-    return format(tagName, { version });
   }
 
   async getTagForHEAD() {
