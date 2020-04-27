@@ -1,3 +1,21 @@
+## v2.3.0 (2020-04-27)
+
+#### :rocket: Enhancement
+* [#42](https://github.com/rwjblue/release-it-lerna-changelog/pull/42) Leverage new `getChangelog` hook. ([@rwjblue](https://github.com/rwjblue))
+
+#### :bug: Bug Fix
+* [#47](https://github.com/rwjblue/release-it-lerna-changelog/pull/47) Ensure that even if there are no changes, we add _something_ to `CHANGELOG.md.` ([@rwjblue](https://github.com/rwjblue))
+* [#48](https://github.com/rwjblue/release-it-lerna-changelog/pull/48) Ensure `CHANGELOG.md` has correct version when `git.tagName` is not present ([@rwjblue](https://github.com/rwjblue))
+
+#### :house: Internal
+* [#44](https://github.com/rwjblue/release-it-lerna-changelog/pull/44) Only run CI for branch pushes to master and PRs. ([@rwjblue](https://github.com/rwjblue))
+* [#43](https://github.com/rwjblue/release-it-lerna-changelog/pull/43) Add Node 14 CI run. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.2.0 (2020-04-20)
 
 #### :rocket: Enhancement
