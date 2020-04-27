@@ -28,7 +28,7 @@
     "execa": "^4.0.0",
     "lerna-changelog": "^1.0.1",
     "release-it": "^13.5.5",
-    "tmp": "^0.1.0",
+    "tmp": "^0.2.0",
     "which": "^2.0.2"
   },
   "devDependencies": {
