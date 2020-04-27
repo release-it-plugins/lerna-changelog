@@ -121,6 +121,18 @@ test('it sets the changelog without version information onto the config', async 
   t.is(changelog, 'The changelog');
 });
 
+test('it prints something to CHANGELOG.md when lerna-changelog returns no content', async (t) => {
+  let infile = tmp.fileSync().name;
+  let plugin = buildPlugin({ infile });
+
+  plugin.responses[`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] = '';
+
+  await runTasks(plugin);
+
+  const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+  t.is(changelog, `## 1.0.1 (${new Date().toISOString().slice(0, 10)})\n\n`);
+});
+
 test('it uses the first commit when no tags exist', async (t) => {
   let infile = tmp.fileSync().name;
 

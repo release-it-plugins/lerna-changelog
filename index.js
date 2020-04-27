@@ -12,6 +12,12 @@ const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 // and this makes it much simpler
 const UNRELEASED = 'Unreleased';
 
+function getToday() {
+  const date = new Date().toISOString();
+
+  return date.slice(0, date.indexOf('T'));
+}
+
 module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   async init() {
     let from = (await this.getTagForHEAD()) || (await this.getFirstCommit());
@@ -63,8 +69,11 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
     return changelog;
   }
 
-  async processChangelog(_changelog) {
-    let changelog = _changelog.replace(UNRELEASED, this.nextVersion);
+  async processChangelog() {
+    // this is populated in `init`
+    let changelog = this.changelog
+      ? this.changelog.replace(UNRELEASED, this.nextVersion)
+      : `## ${this.nextVersion} (${getToday()})`;
 
     let finalChangelog = await this.reviewChangelog(changelog);
 
@@ -159,9 +168,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async beforeRelease() {
-    // this is populated in `init`
-    let changelog = this.changelog || '';
-    let processedChangelog = await this.processChangelog(changelog);
+    let processedChangelog = await this.processChangelog();
 
     this.debug({ changelog: processedChangelog });
 
