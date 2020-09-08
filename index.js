@@ -82,7 +82,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
 
   async _launchEditor(tmpFile) {
     // do not launch the editor for dry runs
-    if (this.global.isDryRun) {
+    if (this.config.isDryRun) {
       return;
     }
 
@@ -155,7 +155,7 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
       }
     }
 
-    if (this.global.isDryRun) {
+    if (this.config.isDryRun) {
       this.log.log(`! Prepending ${infile} with release notes.`);
     } else {
       let currentFileData = hasInfile ? fs.readFileSync(infile, { encoding: 'utf8' }) : '';

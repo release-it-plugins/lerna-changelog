@@ -218,7 +218,7 @@ test('does not launch the editor for dry-run', async (t) => {
 
   let plugin = buildPlugin({ infile, launchEditor: `${editor} \${file}` });
 
-  plugin.global.isDryRun = true;
+  plugin.config.options['dry-run'] = true;
 
   await runTasks(plugin);
 
