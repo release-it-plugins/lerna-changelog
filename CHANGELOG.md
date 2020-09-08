@@ -1,3 +1,13 @@
+## v2.4.0 (2020-09-08)
+
+#### :rocket: Enhancement
+* [#78](https://github.com/rwjblue/release-it-lerna-changelog/pull/78) Make compatible with release-it@14 ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- [@dependabot-preview[bot]](https://github.com/apps/dependabot-preview)
+
+
 ## v2.3.0 (2020-04-27)
 
 #### :rocket: Enhancement
