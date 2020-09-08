@@ -1,3 +1,5 @@
+'use strict';
+
 const { EOL } = require('os');
 const fs = require('fs');
 const which = require('which');
