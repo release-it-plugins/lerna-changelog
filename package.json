@@ -27,8 +27,8 @@
   "dependencies": {
     "execa": "^4.0.3",
     "lerna-changelog": "^1.0.1",
-    "release-it": "^14.0.3",
     "tmp": "^0.2.1",
+    "validate-peer-dependencies": "^1.0.0",
     "which": "^2.0.2"
   },
   "devDependencies": {
@@ -38,7 +38,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.1.2",
+    "release-it": "^14.0.3",
     "sinon": "^9.1.0"
+  },
+  "peerDependencies": {
+    "release-it": "^14.0.0"
   },
   "engines": {
     "node": "10.* || 12.* || >= 14"
