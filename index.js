@@ -8,6 +8,8 @@ const { format } = require('release-it/lib/util');
 const tmp = require('tmp');
 const execa = require('execa');
 
+require('validate-peer-dependencies')(__dirname);
+
 const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 
 // using a const here, because we may need to change this value in the future
