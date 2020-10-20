@@ -1,3 +1,14 @@
+## v3.0.0 (2020-10-20)
+
+#### :boom: Breaking Change
+* [#87](https://github.com/rwjblue/release-it-lerna-changelog/pull/87) Make `release-it` a peer dependency (require host project to provide). ([@rwjblue](https://github.com/rwjblue))
+* [#89](https://github.com/rwjblue/release-it-lerna-changelog/pull/89) Drop Node 11 and 13 support. ([@rwjblue](https://github.com/rwjblue))
+* [#88](https://github.com/rwjblue/release-it-lerna-changelog/pull/88) Drop `release-it@13` support. ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+
+
 ## v2.4.0 (2020-09-08)
 
 #### :rocket: Enhancement
