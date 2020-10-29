@@ -53,7 +53,7 @@ class TestPlugin extends Plugin {
       // always assume v1.0.0 unless specifically overridden
       'git describe --tags --abbrev=0': 'v1.0.0',
 
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]: '### Unreleased (2020-03-18)\n\nThe changelog',
+      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]: '## Unreleased (2020-03-18)\n\nThe changelog',
     };
 
     this.commands = [];
@@ -110,7 +110,7 @@ test('it honors custom git.tagName formatting', async (t) => {
   ]);
 
   const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
-  t.is(changelog, `### v1.0.1 (2020-03-18)\n\nThe changelog\n\n`);
+  t.is(changelog, `## v1.0.1 (2020-03-18)\n\nThe changelog\n\n`);
 });
 
 test('it sets the changelog without version information onto the config', async (t) => {
@@ -147,7 +147,7 @@ test('it uses the first commit when no tags exist', async (t) => {
       value: 'hahahahaah, does not exist',
     },
     'git rev-list --max-parents=0 HEAD': 'aabc',
-    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `### Unreleased\n\nThe changelog\n### v1.0.0\n\nThe old changelog`,
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
   });
 
   await runTasks(plugin);
@@ -159,7 +159,7 @@ test('it uses the first commit when no tags exist', async (t) => {
   ]);
 
   const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
-  t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
+  t.is(changelog.trim(), '## v1.0.1\n\nThe changelog\n## v1.0.0\n\nThe old changelog');
 });
 
 test('it writes the changelog to the specified file when it did not exist', async (t) => {
@@ -171,7 +171,7 @@ test('it writes the changelog to the specified file when it did not exist', asyn
 
   Object.assign(plugin.responses, {
     'git rev-list --max-parents=0 HEAD': 'aabc',
-    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `### Unreleased\n\nThe changelog\n### v1.0.0\n\nThe old changelog`,
+    [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
   });
 
   await runTasks(plugin);
@@ -185,7 +185,7 @@ test('it writes the changelog to the specified file when it did not exist', asyn
   ]);
 
   const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
-  t.is(changelog.trim(), '### v1.0.1\n\nThe changelog\n### v1.0.0\n\nThe old changelog');
+  t.is(changelog.trim(), '## v1.0.1\n\nThe changelog\n## v1.0.0\n\nThe old changelog');
 });
 
 test('prepends the changelog to the existing file', async (t) => {
@@ -198,7 +198,7 @@ test('prepends the changelog to the existing file', async (t) => {
   await runTasks(plugin);
 
   const changelog = fs.readFileSync(infile);
-  t.is(changelog.toString().trim(), '### v1.0.1 (2020-03-18)\n\nThe changelog\n\nOld contents');
+  t.is(changelog.toString().trim(), '## v1.0.1 (2020-03-18)\n\nThe changelog\n\nOld contents');
 });
 
 test('uses launchEditor command', async (t) => {
@@ -313,7 +313,7 @@ test('launches configured editor, updates infile, and propogates changes to cont
   const changelogFileContents = fs.readFileSync(infile);
   t.is(
     changelogFileContents.toString().trim(),
-    '### v1.0.1 (2020-03-18)\n\nThe changelog\nExtra stuff!'
+    '## v1.0.1 (2020-03-18)\n\nThe changelog\nExtra stuff!'
   );
 
   const { changelog } = plugin.config.getContext();
