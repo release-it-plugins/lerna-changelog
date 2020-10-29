@@ -201,6 +201,22 @@ test('prepends the changelog to the existing file', async (t) => {
   t.is(changelog.toString().trim(), '## v1.0.1 (2020-03-18)\n\nThe changelog\n\nOld contents');
 });
 
+test('adds the changelog after an existing first level heading', async (t) => {
+  let infile = tmp.fileSync().name;
+  let plugin = buildPlugin({ infile });
+  plugin.config.setContext({ git: { tagName: 'v${version}' } });
+
+  fs.writeFileSync(infile, '# Changelog\n\n## v1.0.0\n\nThe old changelog', { encoding: 'utf8' });
+
+  await runTasks(plugin);
+
+  const changelog = fs.readFileSync(infile);
+  t.is(
+    changelog.toString().trim(),
+    '# Changelog\n\n## v1.0.1 (2020-03-18)\n\nThe changelog\n\n## v1.0.0\n\nThe old changelog'
+  );
+});
+
 test('uses launchEditor command', async (t) => {
   let infile = tmp.fileSync().name;
 

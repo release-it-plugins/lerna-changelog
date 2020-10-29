@@ -7,6 +7,7 @@ const { Plugin } = require('release-it');
 const { format } = require('release-it/lib/util');
 const tmp = require('tmp');
 const execa = require('execa');
+const parse = require('mdast-util-from-markdown');
 
 require('validate-peer-dependencies')(__dirname);
 
@@ -173,7 +174,16 @@ module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   _insertContent(newContent, oldContent) {
-    return newContent + EOL + EOL + oldContent;
+    let insertOffset = this._findInsertOffset(oldContent);
+    let before = oldContent.slice(0, insertOffset);
+    let after = oldContent.slice(insertOffset);
+    return before + newContent + EOL + EOL + after;
+  }
+
+  _findInsertOffset(oldContent) {
+    let ast = parse(oldContent);
+    let firstH2 = ast.children.find((it) => it.type === 'heading' && it.depth === 2);
+    return firstH2 ? firstH2.position.start.offset : 0;
   }
 
   async beforeRelease() {
