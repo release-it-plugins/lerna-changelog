@@ -1,3 +1,12 @@
+## v3.1.0 (2020-10-29)
+
+#### :rocket: Enhancement
+* [#91](https://github.com/rwjblue/release-it-lerna-changelog/pull/91) Insert new changelog content before the first h2 existing element ([@Turbo87](https://github.com/Turbo87))
+
+#### Committers: 1
+- Tobias Bieniek ([@Turbo87](https://github.com/Turbo87))
+
+
 ## v3.0.0 (2020-10-20)
 
 #### :boom: Breaking Change
