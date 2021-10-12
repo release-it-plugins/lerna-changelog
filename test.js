@@ -53,7 +53,8 @@ class TestPlugin extends Plugin {
       // always assume v1.0.0 unless specifically overridden
       'git describe --tags --abbrev=0': 'v1.0.0',
 
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]: '## Unreleased (2020-03-18)\n\nThe changelog',
+      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]:
+        '## Unreleased (2020-03-18)\n\nThe changelog',
     };
 
     this.commands = [];
