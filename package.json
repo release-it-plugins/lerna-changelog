@@ -64,5 +64,9 @@
     "github": {
       "release": true
     }
+  },
+  "volta": {
+    "node": "14.18.1",
+    "npm": "8.0.0"
   }
 }
