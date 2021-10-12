@@ -35,13 +35,12 @@
   },
   "devDependencies": {
     "ava": "^3.15.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.4.1",
-    "release-it": "^14.10.1",
-    "sinon": "^9.2.4"
+    "release-it": "^14.11.6"
   },
   "peerDependencies": {
     "release-it": "^14.0.0"
