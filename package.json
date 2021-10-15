@@ -24,6 +24,7 @@
   "ava": {
     "serial": true
   },
+  "type": "module",
   "dependencies": {
     "execa": "^4.1.0",
     "lerna-changelog": "^2.2.0",

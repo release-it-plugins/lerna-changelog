@@ -1,16 +1,22 @@
-'use strict';
+import { fileURLToPath } from 'node:url';
+import { dirname } from 'node:path';
+import { createRequire } from 'node:module';
+import { EOL } from 'node:os';
+import fs from 'node:fs';
+import which from 'which';
+import { Plugin } from 'release-it';
+import { format } from 'release-it/lib/util.js';
+import tmp from 'tmp';
+import execa from 'execa';
+import parse from 'mdast-util-from-markdown';
 
-const { EOL } = require('os');
-const fs = require('fs');
-const which = require('which');
-const { Plugin } = require('release-it');
-const { format } = require('release-it/lib/util');
-const tmp = require('tmp');
-const execa = require('execa');
-const parse = require('mdast-util-from-markdown');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-require('validate-peer-dependencies')(__dirname);
+import validatePeerDependencies from 'validate-peer-dependencies';
+validatePeerDependencies(__dirname);
 
+const require = createRequire(import.meta.url);
 const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 
 // using a const here, because we may need to change this value in the future
@@ -23,7 +29,7 @@ function getToday() {
   return date.slice(0, date.indexOf('T'));
 }
 
-module.exports = class LernaChangelogGeneratorPlugin extends Plugin {
+export default class LernaChangelogGeneratorPlugin extends Plugin {
   async init() {
     let from = (await this.getTagForHEAD()) || (await this.getFirstCommit());
     this.changelog = await this._execLernaChangelog(from);
