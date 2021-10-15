@@ -1,8 +1,8 @@
-import { fileURLToPath } from 'node:url';
-import { dirname } from 'node:path';
-import { createRequire } from 'node:module';
-import { EOL } from 'node:os';
-import fs from 'node:fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { createRequire } from 'module';
+import { EOL } from 'os';
+import fs from 'fs';
 import which from 'which';
 import { Plugin } from 'release-it';
 import { format } from 'release-it/lib/util.js';
