@@ -7,6 +7,17 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+    - run: npm ci
+    - run: npm run lint:js
+
   build:
     name: "Node ${{ matrix.node-version }}"
 
@@ -23,7 +34,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: install dependencies
       run: npm ci
-    - run: npm run lint:js
     - run: npm test
 
   release-it-compat:
@@ -43,5 +53,4 @@ jobs:
     - name: install dependencies
       run: npm ci
     - run: npm install --saveDev release-it@${{ matrix.release-it-version }}
-    - run: npm run lint:js
     - run: npm test

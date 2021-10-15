@@ -1,15 +1,17 @@
-'use strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import tmp from 'tmp';
+import test from 'ava';
+import { factory, runTasks } from 'release-it/test/util/index.js';
+import Plugin from './index.js';
 
-const fs = require('fs');
-const path = require('path');
-const tmp = require('tmp');
-const test = require('ava');
-const { factory, runTasks } = require('release-it/test/util');
-const Plugin = require('./index');
 const EDITOR = process.env.EDITOR || null;
 const PATH = process.env.PATH;
 
 tmp.setGracefulCleanup();
+
+const require = createRequire(import.meta.url);
 
 const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 const namespace = 'release-it-lerna-changelog';
