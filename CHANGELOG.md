@@ -1,3 +1,22 @@
+
+## v4.0.0 (2021-10-15)
+
+#### :boom: Breaking Change
+* [#158](https://github.com/rwjblue/release-it-lerna-changelog/pull/158) Migrate to using ESM ([@rwjblue](https://github.com/rwjblue))
+* [#149](https://github.com/rwjblue/release-it-lerna-changelog/pull/149) Drop support for Node 10 ([@rwjblue](https://github.com/rwjblue))
+
+#### :bug: Bug Fix
+* [#148](https://github.com/rwjblue/release-it-lerna-changelog/pull/148) Update Lerna-changelog to 2.2.0 ([@elwayman02](https://github.com/elwayman02))
+
+#### :house: Internal
+* [#157](https://github.com/rwjblue/release-it-lerna-changelog/pull/157) Update dependencies/devDependencies to latest ([@rwjblue](https://github.com/rwjblue))
+* [#151](https://github.com/rwjblue/release-it-lerna-changelog/pull/151) Migrate from yarn to npm ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 2
+- Jordan Hawker ([@elwayman02](https://github.com/elwayman02))
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+
+
 ## v3.1.0 (2020-10-29)
 
 #### :rocket: Enhancement
