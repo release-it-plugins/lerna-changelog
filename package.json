@@ -43,6 +43,12 @@
     "release-it": "^14.11.6",
     "sinon": "^11.1.2"
   },
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./cjs-wrapper.cjs"
+    }
+  },
   "peerDependencies": {
     "release-it": "^14.0.0"
   },
@@ -54,7 +60,7 @@
   },
   "release-it": {
     "plugins": {
-      "./index.js": {
+      "./cjs-wrapper.cjs": {
         "infile": "CHANGELOG.md",
         "launchEditor": true
       }
