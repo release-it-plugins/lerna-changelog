@@ -208,4 +208,4 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
       await this.writeChangelog(processedChangelog);
     }
   }
-};
+}
