@@ -8,7 +8,7 @@ import { Plugin } from 'release-it';
 import { format } from 'release-it/lib/util.js';
 import tmp from 'tmp';
 import execa from 'execa';
-import parse from 'mdast-util-from-markdown';
+import { fromMarkdown } from 'mdast-util-from-markdown';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -187,7 +187,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   _findInsertOffset(oldContent) {
-    let ast = parse(oldContent);
+    let ast = fromMarkdown(oldContent);
     let firstH2 = ast.children.find((it) => it.type === 'heading' && it.depth === 2);
     return firstH2 ? firstH2.position.start.offset : 0;
   }
