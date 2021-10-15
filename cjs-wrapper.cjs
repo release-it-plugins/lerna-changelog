@@ -2,7 +2,7 @@
 let RealPlugin;
 
 module.exports = class FakeCJSWrapperPlugin {
-  static async isEnabled() {
+  static async isEnabled(...args) {
     // we use the async of this method to enable us to absorb the dynamic
     // import statement
 
@@ -14,6 +14,12 @@ module.exports = class FakeCJSWrapperPlugin {
     // eslint-disable-next-line node/no-unsupported-features/es-syntax
     let RealPluginModule = await import('./index.js');
     RealPlugin = RealPluginModule.default;
+
+    return RealPlugin.isEnabled(...args);
+  }
+
+  static disablePlugin(...args) {
+    return RealPlugin.disablePlugin(...args);
   }
 
   constructor(...args) {
