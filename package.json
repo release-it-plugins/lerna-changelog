@@ -15,7 +15,8 @@
   "author": "Robert Jackson <me@rwjblue.com>",
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "cjs-wrapper.cjs"
   ],
   "scripts": {
     "lint:js": "eslint .",
