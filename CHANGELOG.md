@@ -1,4 +1,14 @@
 
+
+## v4.0.1 (2021-10-25)
+
+#### :bug: Bug Fix
+* [#163](https://github.com/rwjblue/release-it-lerna-changelog/pull/163) fix: include CJS wrapper in published files ([@alexlafroscia](https://github.com/alexlafroscia))
+
+#### Committers: 1
+- Alex LaFroscia ([@alexlafroscia](https://github.com/alexlafroscia))
+
+
 ## v4.0.0 (2021-10-15)
 
 #### :boom: Breaking Change
