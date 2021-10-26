@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: actions/checkout@v2.3.5
     - uses: actions/setup-node@v2.4.1
       with:
         node-version: 14.x
@@ -29,7 +29,7 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
 
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: actions/checkout@v2.3.5
     - uses: actions/setup-node@v2.4.1
       with:
         node-version: ${{ matrix.node-version }}
@@ -48,7 +48,7 @@ jobs:
         release-it-version: ["14.0.0", "14.1.0", "14.2.0"]
 
     steps:
-    - uses: actions/checkout@v2.3.4
+    - uses: actions/checkout@v2.3.5
     - uses: actions/setup-node@v2.4.1
       with:
         node-version: 14
