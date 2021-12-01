@@ -27,7 +27,7 @@
   },
   "type": "module",
   "dependencies": {
-    "execa": "^5.1.1",
+    "execa": "^6.0.0",
     "lerna-changelog": "^2.2.0",
     "mdast-util-from-markdown": "^1.0.4",
     "tmp": "^0.2.1",
