@@ -42,7 +42,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.4.1",
     "release-it": "^14.11.6",
-    "sinon": "^11.1.2"
+    "sinon": "^13.0.2"
   },
   "exports": {
     ".": {
