@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 import tmp from 'tmp';
-import { factory, runTasks } from 'release-it/test/util.js';
+import { factory, runTasks } from 'release-it/test/util';
 import Plugin from './index.js';
 
 const EDITOR = process.env.EDITOR || null;
