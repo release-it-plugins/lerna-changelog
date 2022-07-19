@@ -20,10 +20,8 @@
   ],
   "scripts": {
     "lint:js": "eslint .",
-    "test": "ava"
-  },
-  "ava": {
-    "serial": true
+    "test": "npm-run-all lint:js test:jest",
+    "test:jest": "NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
   "type": "module",
   "dependencies": {
@@ -36,11 +34,14 @@
     "which": "^2.0.2"
   },
   "devDependencies": {
-    "ava": "^3.15.0",
+    "@jest/globals": "^28.1.2",
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^28.1.2",
+    "jest-environment-node": "^28.1.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.4.1",
     "release-it": "^15.1.2",
     "sinon": "^11.1.2"
