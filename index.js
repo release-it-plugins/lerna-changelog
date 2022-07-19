@@ -5,7 +5,7 @@ import { EOL } from 'os';
 import fs from 'fs';
 import which from 'which';
 import { Plugin } from 'release-it';
-import { format } from 'release-it/lib/util.js';
+import template from 'lodash.template';
 import tmp from 'tmp';
 import execa from 'execa';
 import { fromMarkdown } from 'mdast-util-from-markdown';
@@ -42,7 +42,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
     let { version } = this.config.getContext();
 
     let tagName = this.config.getContext('git.tagName');
-    let nextVersion = tagName ? format(tagName, { version }) : version;
+    let nextVersion = tagName ? template(tagName)({ version }) : version;
 
     return nextVersion;
   }

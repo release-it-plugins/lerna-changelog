@@ -10,6 +10,13 @@ module.exports = {
     node: true,
   },
   rules: {
+    // See https://github.com/mysticatea/eslint-plugin-node/issues/255 for more info.
+    'node/no-missing-import': [
+      'error',
+      {
+        allowModules: ['release-it'],
+      },
+    ],
     'prettier/prettier': 'error',
   },
   overrides: [
@@ -17,6 +24,12 @@ module.exports = {
       files: ['**/*.cjs'],
       parserOptions: {
         sourceType: 'script',
+      },
+    },
+    {
+      files: ['test.js'],
+      env: {
+        jest: true,
       },
     },
   ],
