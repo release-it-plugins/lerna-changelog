@@ -1,5 +1,5 @@
 {
-  "name": "release-it-lerna-changelog",
+  "name": "@release-it-plugins/lerna-changelog",
   "version": "5.0.0",
   "description": "release-it plugin for lerna-changelog ",
   "keywords": [
@@ -10,7 +10,7 @@
     "changelog",
     "lerna"
   ],
-  "repository": "https://github.com/rwjblue/release-it-lerna-changelog",
+  "repository": "https://github.com/rwjblue/@release-it-plugins/lerna-changelog",
   "license": "MIT",
   "author": "Robert Jackson <me@rwjblue.com>",
   "main": "index.js",
