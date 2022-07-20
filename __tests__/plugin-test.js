@@ -13,7 +13,7 @@ tmp.setGracefulCleanup();
 const require = createRequire(import.meta.url);
 
 const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
-const namespace = 'release-it-lerna-changelog';
+const namespace = '@release-it-plugins/lerna-changelog';
 
 function resetPATH() {
   process.env.PATH = PATH;
@@ -87,7 +87,7 @@ function buildPlugin(config = {}, _Plugin = TestPlugin) {
   return plugin;
 }
 
-describe('release-it-lerna-changelog', () => {
+describe('@release-it-plugins/lerna-changelog', () => {
   test('it invokes lerna-changelog', async () => {
     let plugin = buildPlugin();
 
@@ -300,7 +300,7 @@ describe('release-it-lerna-changelog', () => {
       ]);
 
       expect(error.message).toEqual(
-        `release-it-lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
+        `@release-it-plugins/lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
       );
     } finally {
       resetEDITOR();

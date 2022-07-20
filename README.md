@@ -1,4 +1,4 @@
-# release-it-lerna-changelog
+# @release-it-plugins/lerna-changelog
 
 This package is a [release-it](https://github.com/release-it/release-it) plugin
 (using [`release-it`'s plugin
@@ -12,12 +12,12 @@ Installation using your projects normal package manager, for example:
 
 ```
 # npm
-npm install --save-dev release-it-lerna-changelog
+npm install --save-dev @release-it-plugins/lerna-changelog
 
-# yarn add --dev release-it-lerna-changelog
+# yarn add --dev @release-it-plugins/lerna-changelog
 ```
 
-Once installed, configure `release-it` to use the plugin. 
+Once installed, configure `release-it` to use the plugin.
 
 Either via `package.json`:
 
@@ -25,7 +25,7 @@ Either via `package.json`:
 {
   "release-it": {
     "plugins": {
-      "release-it-lerna-changelog": {}
+      "@release-it-plugins/lerna-changelog": {}
     }
   }
 }
@@ -36,14 +36,14 @@ Or via `.release-it.json`:
 ```json
 {
   "plugins": {
-    "release-it-lerna-changelog": {}
+    "@release-it-plugins/lerna-changelog": {}
   }
 }
 ```
 
 ## Configuration
 
-`release-it-lerna-changelog` supports one configuration option, `infile`. When
+`@release-it-plugins/lerna-changelog` supports one configuration option, `infile`. When
 specified, this option represents the file name to prepend changelog
 information to during a release.
 
@@ -53,7 +53,7 @@ For example, given the following configuration (in `package.json`):
 {
   "release-it": {
     "plugins": {
-      "release-it-lerna-changelog": {
+      "@release-it-plugins/lerna-changelog": {
         "infile": "CHANGELOG.md",
         "launchEditor": true
       }
@@ -62,7 +62,7 @@ For example, given the following configuration (in `package.json`):
 }
 ```
 
-The two options that `release-it-lerna-changelog` is aware of are:
+The two options that `@release-it-plugins/lerna-changelog` is aware of are:
 
 ### `infile`
 
@@ -70,7 +70,7 @@ The two options that `release-it-lerna-changelog` is aware of are:
 
 ### `launchEditor`
 
-When specified, `release-it-lerna-changelog` will generate the changelog
+When specified, `@release-it-plugins/lerna-changelog` will generate the changelog
 then launch the configured editor with a temporary file. This allows the person
 doing the release to customize the changelog before continuing.
 
