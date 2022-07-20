@@ -1,5 +1,22 @@
 
 
+
+## v5.0.0 (2022-07-20)
+
+#### :boom: Breaking Change
+* [#208](https://github.com/release-it-plugins/release-it-lerna-changelog/pull/208) Fix compatibility with `release-it` v15 ([@bertdeblock](https://github.com/bertdeblock))
+
+#### :bug: Bug Fix
+* [#223](https://github.com/release-it-plugins/release-it-lerna-changelog/pull/223) Bumps release-it to include fixed exports ([@scalvert](https://github.com/scalvert))
+
+#### :house: Internal
+* [#222](https://github.com/release-it-plugins/release-it-lerna-changelog/pull/222) Move test to __tests__ directory ([@scalvert](https://github.com/scalvert))
+
+#### Committers: 2
+- Bert De Block ([@bertdeblock](https://github.com/bertdeblock))
+- Steve Calvert ([@scalvert](https://github.com/scalvert))
+
+
 ## v4.0.1 (2021-10-25)
 
 #### :bug: Bug Fix

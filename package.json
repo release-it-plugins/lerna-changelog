@@ -1,6 +1,6 @@
 {
   "name": "release-it-lerna-changelog",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "release-it plugin for lerna-changelog ",
   "keywords": [
     "release",
