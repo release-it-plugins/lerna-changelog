@@ -59,7 +59,8 @@
     "node": "^14.13.1 || >= 16"
   },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "release-it": {
     "plugins": {
