@@ -13,6 +13,13 @@
   "repository": "https://github.com/release-it-plugins/lerna-changelog",
   "license": "MIT",
   "author": "Robert Jackson <me@rwjblue.com>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./cjs-wrapper.cjs"
+    }
+  },
   "main": "index.js",
   "files": [
     "index.js",
@@ -23,7 +30,6 @@
     "test": "npm-run-all lint:js test:jest",
     "test:jest": "NODE_OPTIONS=--experimental-vm-modules yarn jest"
   },
-  "type": "module",
   "dependencies": {
     "execa": "^5.1.1",
     "lerna-changelog": "^2.2.0",
@@ -46,21 +52,19 @@
     "release-it": "^15.1.3",
     "sinon": "^14.0.0"
   },
-  "exports": {
-    ".": {
-      "import": "./index.js",
-      "require": "./cjs-wrapper.cjs"
-    }
-  },
   "peerDependencies": {
     "release-it": "^14.0.0 || ^15.1.3"
   },
   "engines": {
     "node": "^14.13.1 || >= 16"
   },
+  "volta": {
+    "node": "14.18.1",
+    "npm": "8.0.0"
+  },
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "release-it": {
     "plugins": {
@@ -75,9 +79,5 @@
     "github": {
       "release": true
     }
-  },
-  "volta": {
-    "node": "14.18.1",
-    "npm": "8.0.0"
   }
 }
