@@ -73,7 +73,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
   }
 
   async _execLernaChangelog(from) {
-    let changelog = await this.exec(`${LERNA_PATH} --next-version=${UNRELEASED} --from=${from}`, {
+    let changelog = await this.exec(`node ${LERNA_PATH} --next-version=${UNRELEASED} --from=${from}`, {
       options: { write: false },
     });
 
