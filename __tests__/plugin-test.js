@@ -54,7 +54,7 @@ class TestPlugin extends Plugin {
       // always assume v1.0.0 unless specifically overridden
       'git describe --tags --abbrev=0': 'v1.0.0',
 
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]:
+      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]:
         '## Unreleased (2020-03-18)\n\nThe changelog',
     };
 
@@ -95,7 +95,10 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
+      [
+        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
+        { write: false },
+      ],
     ]);
   });
 
@@ -109,7 +112,10 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
+      [
+        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
+        { write: false },
+      ],
     ]);
 
     const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
@@ -130,7 +136,8 @@ describe('@release-it-plugins/lerna-changelog', () => {
     let infile = tmp.fileSync().name;
     let plugin = buildPlugin({ infile });
 
-    plugin.responses[`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] = '';
+    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
+      '';
 
     await runTasks(plugin);
 
@@ -150,7 +157,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
         value: 'hahahahaah, does not exist',
       },
       'git rev-list --max-parents=0 HEAD': 'aabc',
-      [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
+      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
     });
 
     await runTasks(plugin);
@@ -158,7 +165,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
       ['git rev-list --max-parents=0 HEAD', { write: false }],
-      [`${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
+      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
     ]);
 
     const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
@@ -174,16 +181,19 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     Object.assign(plugin.responses, {
       'git rev-list --max-parents=0 HEAD': 'aabc',
-      [`${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
+      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
     });
 
     await runTasks(plugin);
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
-      [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
+      [
+        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
+        { write: false },
+      ],
       ['git rev-list --max-parents=0 HEAD', { write: false }],
-      [`${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
+      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
       [`git add ${infile}`, {}],
     ]);
 
@@ -296,7 +306,10 @@ describe('@release-it-plugins/lerna-changelog', () => {
     } catch (error) {
       expect(plugin.commands).toStrictEqual([
         ['git describe --tags --abbrev=0', { write: false }],
-        [`${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`, { write: false }],
+        [
+          `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
+          { write: false },
+        ],
       ]);
 
       expect(error.message).toEqual(
