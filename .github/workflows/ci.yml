@@ -36,7 +36,7 @@ jobs:
         cache: npm
     - name: install dependencies
       run: npm ci
-    - run: npm test
+    - run: npm run test:jest
 
   release-it-compat:
     name: "release-it@${{ matrix.release-it-version }}"
@@ -56,4 +56,4 @@ jobs:
     - name: install dependencies
       run: npm ci
     - run: npm install --saveDev release-it@${{ matrix.release-it-version }}
-    - run: npm test
+    - run: npm run test:jest
