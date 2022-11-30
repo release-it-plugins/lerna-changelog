@@ -2,7 +2,7 @@
 
 This package is a [release-it](https://github.com/release-it/release-it) plugin
 (using [`release-it`'s plugin
-API](https://github.com/release-it/release-it/tree/master/docs/plugins)) that
+API](https://github.com/release-it/release-it/blob/master/docs/plugins.md)) that
 integrates [lerna-changelog](https://github.com/lerna/lerna-changelog) into the
 `release-it` pipeline.
 
