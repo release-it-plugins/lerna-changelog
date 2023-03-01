@@ -40,7 +40,7 @@
     "which": "^2.0.2"
   },
   "devDependencies": {
-    "@jest/globals": "^28.1.2",
+    "@jest/globals": "^29.4.3",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-node": "^11.1.0",
