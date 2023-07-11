@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { describe, test, expect } from 'vitest';
 import { createRequire } from 'module';
 import tmp from 'tmp';
 import { factory, runTasks } from 'release-it/test/util/index.js';
