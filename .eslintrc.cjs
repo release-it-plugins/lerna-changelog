@@ -26,11 +26,5 @@ module.exports = {
         sourceType: 'script',
       },
     },
-    {
-      files: ['jest.setup.js', '__tests__/**/*.js'],
-      env: {
-        jest: true,
-      },
-    },
   ],
 };
