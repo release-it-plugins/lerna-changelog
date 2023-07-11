@@ -1,6 +1,27 @@
 
 
 
+
+## v6.0.0 (2023-07-11)
+
+#### :boom: Breaking Change
+* [#279](https://github.com/release-it-plugins/lerna-changelog/pull/279) Release it 16 ([@scalvert](https://github.com/scalvert))
+
+#### :bug: Bug Fix
+* [#241](https://github.com/release-it-plugins/lerna-changelog/pull/241) Fix changelog generation on windows ([@patricklx](https://github.com/patricklx))
+
+#### :house: Internal
+* [#281](https://github.com/release-it-plugins/lerna-changelog/pull/281) Converting to vitest over jest ([@scalvert](https://github.com/scalvert))
+* [#244](https://github.com/release-it-plugins/lerna-changelog/pull/244) Ensure we test latest `release-it@15` version in CI ([@rwjblue](https://github.com/rwjblue))
+* [#242](https://github.com/release-it-plugins/lerna-changelog/pull/242) Avoid duplicate linting ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 4
+- Bryan Mishkin ([@bmish](https://github.com/bmish))
+- Patrick Pircher ([@patricklx](https://github.com/patricklx))
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- Steve Calvert ([@scalvert](https://github.com/scalvert))
+
+
 ## v5.0.0 (2022-07-20)
 
 #### :boom: Breaking Change
