@@ -2,6 +2,22 @@
 
 
 
+
+## v6.1.0 (2024-01-15)
+
+#### :rocket: Enhancement
+* [#298](https://github.com/release-it-plugins/lerna-changelog/pull/298) Add support for `release-it@17.0.0` ([@juancarlosjr97](https://github.com/juancarlosjr97))
+
+#### :house: Internal
+* [#299](https://github.com/release-it-plugins/lerna-changelog/pull/299) Add `release-it@^17` to CI configuration. ([@rwjblue](https://github.com/rwjblue))
+* [#283](https://github.com/release-it-plugins/lerna-changelog/pull/283) Updating actions to standardize between repos ([@scalvert](https://github.com/scalvert))
+
+#### Committers: 3
+- Juan Carlos Blanco Delgado ([@juancarlosjr97](https://github.com/juancarlosjr97))
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+- Steve Calvert ([@scalvert](https://github.com/scalvert))
+
+
 ## v6.0.0 (2023-07-11)
 
 #### :boom: Breaking Change
