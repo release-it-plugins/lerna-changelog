@@ -57,8 +57,7 @@
     "node": ">= 16"
   },
   "volta": {
-    "node": "16.20.1",
-    "npm": "9.8.0"
+    "node": "18.20.3"
   },
   "publishConfig": {
     "access": "public",
