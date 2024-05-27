@@ -5,11 +5,12 @@ import { EOL } from 'os';
 import fs from 'fs';
 import which from 'which';
 import { Plugin } from 'release-it';
-import template from 'lodash/template';
+import _ from 'lodash';
 import tmp from 'tmp';
 import execa from 'execa';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 
+const template = _.template;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
