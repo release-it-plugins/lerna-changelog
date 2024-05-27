@@ -3,6 +3,23 @@
 
 
 
+
+## v7.0.0 (2024-05-27)
+
+#### :boom: Breaking Change
+* [#302](https://github.com/release-it-plugins/lerna-changelog/pull/302) Bumps to node@18 ([@scalvert](https://github.com/scalvert))
+
+#### :bug: Bug Fix
+* [#303](https://github.com/release-it-plugins/lerna-changelog/pull/303) Fixes lodash import that isn't playing nice with ESM ([@scalvert](https://github.com/scalvert))
+
+#### :house: Internal
+* [#304](https://github.com/release-it-plugins/lerna-changelog/pull/304) Upgrades ci workflow to use node@18, upgrades action versions ([@scalvert](https://github.com/scalvert))
+
+#### Committers: 2
+- Markus Sanin ([@mkszepp](https://github.com/mkszepp))
+- Steve Calvert ([@scalvert](https://github.com/scalvert))
+
+
 ## v6.1.0 (2024-01-15)
 
 #### :rocket: Enhancement
