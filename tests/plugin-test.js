@@ -81,16 +81,16 @@ class TestPlugin extends Plugin {
   }
 }
 
-function buildPlugin(config = {}, _Plugin = TestPlugin) {
+async function buildPlugin(config = {}, _Plugin = TestPlugin) {
   const options = { [namespace]: config };
-  const plugin = factory(_Plugin, { namespace, options });
+  const plugin = await factory(_Plugin, { namespace, options });
 
   return plugin;
 }
 
 describe('@release-it-plugins/lerna-changelog', () => {
   test('it invokes lerna-changelog', async () => {
-    let plugin = buildPlugin();
+    let plugin = await buildPlugin();
 
     await runTasks(plugin);
 
@@ -105,7 +105,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
   test('it honors custom git.tagName formatting', async () => {
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
 
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
@@ -125,7 +125,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
   test('it sets the changelog without version information onto the config', async () => {
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
 
     await runTasks(plugin);
 
@@ -135,7 +135,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
   test('it prints something to CHANGELOG.md when lerna-changelog returns no content', async () => {
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
 
     plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
       '';
@@ -149,7 +149,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
   test('it uses the first commit when no tags exist', async () => {
     let infile = tmp.fileSync().name;
 
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
     Object.assign(plugin.responses, {
@@ -177,7 +177,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
     let infile = tmp.fileSync().name;
     fs.unlinkSync(infile);
 
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
     Object.assign(plugin.responses, {
@@ -204,7 +204,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
   test('prepends the changelog to the existing file', async () => {
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
     fs.writeFileSync(infile, 'Old contents', { encoding: 'utf8' });
@@ -219,7 +219,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
   test('adds the changelog after an existing first level heading', async () => {
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({ infile });
+    let plugin = await buildPlugin({ infile });
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
     fs.writeFileSync(infile, '# Changelog\n\n## v1.0.0\n\nThe old changelog', { encoding: 'utf8' });
@@ -237,7 +237,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     let { editor, output } = await buildEditorCommand();
 
-    let plugin = buildPlugin({ infile, launchEditor: `${editor} \${file}` });
+    let plugin = await buildPlugin({ infile, launchEditor: `${editor} \${file}` });
 
     await runTasks(plugin);
 
@@ -249,7 +249,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     let { editor, output } = await buildEditorCommand();
 
-    let plugin = buildPlugin({ infile, launchEditor: `${editor} \${file}` });
+    let plugin = await buildPlugin({ infile, launchEditor: `${editor} \${file}` });
 
     plugin.config.options['dry-run'] = true;
 
@@ -263,7 +263,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     let { editor, output } = await buildEditorCommand();
 
-    let plugin = buildPlugin({ infile, launchEditor: true });
+    let plugin = await buildPlugin({ infile, launchEditor: true });
 
     try {
       process.env.EDITOR = editor;
@@ -280,7 +280,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     let { editor, output } = await buildEditorCommand('editor');
 
-    let plugin = buildPlugin({ infile, launchEditor: true });
+    let plugin = await buildPlugin({ infile, launchEditor: true });
 
     try {
       delete process.env.EDITOR;
@@ -297,7 +297,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
   test('throws if launchEditor is `true`, no $EDITOR present, and `editor` is not found on $PATH', async () => {
     let infile = tmp.fileSync().name;
 
-    let plugin = buildPlugin({ infile, launchEditor: true });
+    let plugin = await buildPlugin({ infile, launchEditor: true });
 
     try {
       delete process.env.EDITOR;
@@ -337,7 +337,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
     });
 
     let infile = tmp.fileSync().name;
-    let plugin = buildPlugin({
+    let plugin = await buildPlugin({
       infile,
       launchEditor: `${process.execPath} ${fakeEditorFile} \${file}`,
     });
