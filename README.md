@@ -14,7 +14,8 @@ Installation using your projects normal package manager, for example:
 # npm
 npm install --save-dev @release-it-plugins/lerna-changelog
 
-# yarn add --dev @release-it-plugins/lerna-changelog
+# yarn
+yarn add --dev @release-it-plugins/lerna-changelog
 ```
 
 Once installed, configure `release-it` to use the plugin.
