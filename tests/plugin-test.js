@@ -244,6 +244,18 @@ describe('@release-it-plugins/lerna-changelog', () => {
     expect(fs.readFileSync(output, 'utf-8')).toEqual(`args: ${plugin.launchedTmpFile}`);
   });
 
+  test('launches a markdown file for editing', async () => {
+    let infile = tmp.fileSync().name;
+
+    let { editor } = await buildEditorCommand();
+
+    let plugin = await buildPlugin({ infile, launchEditor: `${editor} \${file}` });
+
+    await runTasks(plugin);
+
+    expect(plugin.launchedTmpFile.endsWith('.md')).toBe(true);
+  });
+
   test('does not launch the editor for dry-run', async () => {
     let infile = tmp.fileSync().name;
 
