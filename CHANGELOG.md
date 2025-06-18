@@ -4,6 +4,16 @@
 
 
 
+
+## v8.0.1 (2025-06-18)
+
+#### :rocket: Enhancement
+* [#310](https://github.com/release-it-plugins/lerna-changelog/pull/310) Ensure file launched via `launchEditor` config is treated as Markdown syntax ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 1
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+
+
 ## v8.0.0 (2025-06-18)
 
 #### :boom: Breaking Change
