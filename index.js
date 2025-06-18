@@ -135,7 +135,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
       return changelog;
     }
 
-    let tmpFile = tmp.fileSync().name;
+    let tmpFile = tmp.fileSync({ postfix: '.md' }).name;
     fs.writeFileSync(tmpFile, changelog, { encoding: 'utf-8' });
 
     await this._launchEditor(tmpFile);
