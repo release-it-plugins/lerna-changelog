@@ -4,6 +4,19 @@
 
 
 
+## v8.0.0 (2025-06-18)
+
+#### :boom: Breaking Change
+* [#307](https://github.com/release-it-plugins/lerna-changelog/pull/307) Support release-it 17, 18, and 19 (drop support for 14, 15, and 16). ([@rwjblue](https://github.com/rwjblue))
+* [#306](https://github.com/release-it-plugins/lerna-changelog/pull/306) Update Node requirement to v20 ([@rwjblue](https://github.com/rwjblue))
+
+#### :house: Internal
+* [#308](https://github.com/release-it-plugins/lerna-changelog/pull/308) Update dependencies ([@rwjblue](https://github.com/rwjblue))
+
+#### Committers: 1
+- Robert Jackson ([@rwjblue](https://github.com/rwjblue))
+
+
 ## v7.0.0 (2024-05-27)
 
 #### :boom: Breaking Change
