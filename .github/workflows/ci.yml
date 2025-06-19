@@ -19,7 +19,7 @@ jobs:
         node-version: [20.x, 22.x, 24.x]
 
     steps:
-      - uses: actions/checkout@v4.1.6
+      - uses: actions/checkout@v4.2.2
       - uses: volta-cli/action@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -38,7 +38,7 @@ jobs:
           ['^17.0.0', '^18.0.0', '^19.0.0']
 
     steps:
-      - uses: actions/checkout@v3.5.3
+      - uses: actions/checkout@v4.2.2
       - uses: volta-cli/action@v4
       - name: install dependencies
         run: npm ci
