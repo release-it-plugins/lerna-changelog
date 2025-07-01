@@ -31,7 +31,7 @@
     "test:vitest": "vitest run"
   },
   "dependencies": {
-    "execa": "^5.1.1",
+    "execa": "^9.6.0",
     "lerna-changelog": "^2.2.0",
     "lodash": "^4.17.21",
     "mdast-util-from-markdown": "^2.0.2",
