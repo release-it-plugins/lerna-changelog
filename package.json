@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.5",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.5.0",
     "eta": "^3.5.0",
