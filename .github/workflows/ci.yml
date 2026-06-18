@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: volta-cli/action@v4
+      - uses: volta-cli/action@v5
         with:
           node-version: ${{ matrix.node-version }}
       - name: install dependencies
@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: volta-cli/action@v4
+      - uses: volta-cli/action@v5
       # Resolve dependencies from scratch with the target release-it version.
       # Swapping release-it in an existing lockfile/tree can leave vitest's
       # optional native rolldown binary uninstalled; a clean resolution (on the
