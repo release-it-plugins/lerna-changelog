@@ -90,6 +90,31 @@ There are a few valid values for `launchEditor`:
 
 Each release will run `lerna-changelog` and prepend the results into `CHANGELOG.md`.
 
+### `prettier`
+
+When set to `true`, the generated changelog section is run through
+[Prettier](https://prettier.io/) as a Markdown formatter before being written
+to `infile` or shown in the editor. This ensures the output is consistently
+formatted and passes Prettier-based linters without requiring a separate
+post-release formatting step.
+
+```json
+{
+  "release-it": {
+    "plugins": {
+      "@release-it-plugins/lerna-changelog": {
+        "infile": "CHANGELOG.md",
+        "prettier": true
+      }
+    }
+  }
+}
+```
+
+This option is `false` by default so existing projects are unaffected. Prettier
+is an optional `peerDependency` — install it in your project (`npm install
+--save-dev prettier`) when enabling this option.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE.md).
