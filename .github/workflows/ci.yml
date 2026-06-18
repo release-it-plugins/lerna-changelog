@@ -16,13 +16,15 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 24.x]
+        node-version: [20, 22, 24]
 
     steps:
       - uses: actions/checkout@v6
-      - uses: volta-cli/action@v5
+      - uses: jdx/mise-action@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          mise_toml: |
+            [tools]
+            node = "${{ matrix.node-version }}"
       - name: install dependencies
         run: npm ci
       - run: npm test
@@ -39,11 +41,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-      - uses: volta-cli/action@v5
+      - uses: jdx/mise-action@v4
       # Resolve dependencies from scratch with the target release-it version.
       # Swapping release-it in an existing lockfile/tree can leave vitest's
       # optional native rolldown binary uninstalled; a clean resolution (on the
-      # volta-pinned Node, which is new enough for it) installs it correctly.
+      # mise-pinned Node, which is new enough for it) installs it correctly.
       - name: install dependencies
         run: |
           rm -f package-lock.json
