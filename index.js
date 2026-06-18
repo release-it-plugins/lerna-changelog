@@ -90,6 +90,12 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
       ? this.changelog.replace(UNRELEASED, this.nextVersion)
       : `## ${this.nextVersion} (${getToday()})`;
 
+    if (this.options.prettier) {
+      // prettier is an optional peerDependency; only loaded when this option is enabled
+      const prettier = await import('prettier');
+      changelog = await prettier.format(changelog, { parser: 'markdown' });
+    }
+
     let finalChangelog = await this.reviewChangelog(changelog);
 
     return finalChangelog;

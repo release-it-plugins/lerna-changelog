@@ -346,6 +346,35 @@ describe('@release-it-plugins/lerna-changelog', () => {
     ]);
   });
 
+  test('formats changelog with prettier when prettier option is true', async () => {
+    let infile = tmp.fileSync().name;
+    let plugin = await buildPlugin({ infile, prettier: true });
+    plugin.config.setContext({ git: { tagName: 'v${version}' } });
+
+    // use * list markers which prettier normalizes to -
+    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
+      '## Unreleased (2020-03-18)\n\n* item one\n* item two';
+
+    await runTasks(plugin);
+
+    const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+    expect(changelog).toContain('- item one\n- item two');
+  });
+
+  test('does not format changelog when prettier option is not set', async () => {
+    let infile = tmp.fileSync().name;
+    let plugin = await buildPlugin({ infile });
+    plugin.config.setContext({ git: { tagName: 'v${version}' } });
+
+    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
+      '## Unreleased (2020-03-18)\n\n* item one\n* item two';
+
+    await runTasks(plugin);
+
+    const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
+    expect(changelog).toContain('* item one\n* item two');
+  });
+
   test('launches configured editor, updates infile, and propogates changes to context', async () => {
     let fakeEditorFile = tmp.fileSync().name;
     // using a function here so it is easier to author (vs a giant string interpolation)
