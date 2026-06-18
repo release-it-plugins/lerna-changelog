@@ -56,7 +56,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
   async getTagForHEAD() {
     try {
       return await this.exec('git describe --tags --abbrev=0', { options: { write: false } });
-    } catch (error) {
+    } catch {
       return null;
     }
   }
