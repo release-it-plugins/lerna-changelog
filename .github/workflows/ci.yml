@@ -10,7 +10,10 @@ on:
 
 jobs:
   build:
-    name: 'Node ${{ matrix.node-version }}'
+    # Keep the ".x" suffix so the job name matches the branch-protection
+    # required contexts ("Node 20.x" etc.). mise resolves e.g. "20" to the
+    # latest 20.x, so the label stays accurate.
+    name: 'Node ${{ matrix.node-version }}.x'
 
     runs-on: ubuntu-latest
 
