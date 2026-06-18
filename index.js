@@ -7,7 +7,7 @@ import which from 'which';
 import { Plugin } from 'release-it';
 import _ from 'lodash';
 import tmp from 'tmp';
-import execa from 'execa';
+import { execaCommand } from 'execa';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 
 const template = _.template;
@@ -56,7 +56,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
   async getTagForHEAD() {
     try {
       return await this.exec('git describe --tags --abbrev=0', { options: { write: false } });
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -125,7 +125,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
 
     editorCommand = editorCommand.replace('${file}', tmpFile);
 
-    await execa.command(editorCommand, { stdio: 'inherit' });
+    await execaCommand(editorCommand, { stdio: 'inherit' });
   }
 
   async reviewChangelog(changelog) {

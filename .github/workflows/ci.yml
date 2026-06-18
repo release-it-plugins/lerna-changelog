@@ -19,8 +19,8 @@ jobs:
         node-version: [20.x, 22.x, 24.x]
 
     steps:
-      - uses: actions/checkout@v4.1.6
-      - uses: volta-cli/action@v4
+      - uses: actions/checkout@v6
+      - uses: volta-cli/action@v5
         with:
           node-version: ${{ matrix.node-version }}
       - name: install dependencies
@@ -35,12 +35,17 @@ jobs:
     strategy:
       matrix:
         release-it-version:
-          ['^17.0.0', '^18.0.0', '^19.0.0']
+          ['^17.0.0', '^18.0.0', '^19.0.0', '^20.0.0']
 
     steps:
-      - uses: actions/checkout@v3.5.3
-      - uses: volta-cli/action@v4
+      - uses: actions/checkout@v6
+      - uses: volta-cli/action@v5
+      # Resolve dependencies from scratch with the target release-it version.
+      # Swapping release-it in an existing lockfile/tree can leave vitest's
+      # optional native rolldown binary uninstalled; a clean resolution (on the
+      # volta-pinned Node, which is new enough for it) installs it correctly.
       - name: install dependencies
-        run: npm ci
-      - run: npm install --saveDev release-it@${{ matrix.release-it-version }}
+        run: |
+          rm -f package-lock.json
+          npm install --save-dev release-it@${{ matrix.release-it-version }}
       - run: npm test

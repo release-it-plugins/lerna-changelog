@@ -1,4 +1,0 @@
-# do not ignore dotfiles
-!.*
-
-/node_modules
