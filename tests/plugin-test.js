@@ -330,9 +330,12 @@ describe('@release-it-plugins/lerna-changelog', () => {
         `Set the EDITOR environment variable, or set launchEditor to an explicit command (e.g. launchEditor: 'code --wait \${file}').`
     );
 
-    // the plugin must not log the error itself — release-it logs thrown errors at the top level,
-    // so calling log.error here would cause the message to appear twice (fixes #58)
-    expect(plugin.log.error.mock.calls.length).toBe(0);
+    // the plugin must not log the error itself — release-it logs thrown errors at the
+    // top level, so logging here too would make the message appear twice (fixes #58).
+    // release-it's test util mocks `log.error` with vitest (.mock.calls) on newer
+    // versions and sinon (.callCount) on older ones, so read whichever is present.
+    let errorLogCount = plugin.log.error.mock?.calls.length ?? plugin.log.error.callCount;
+    expect(errorLogCount).toBe(0);
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
