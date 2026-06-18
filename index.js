@@ -111,12 +111,10 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
       }
 
       if (!EDITOR) {
-        let error = new Error(
-          `@release-it-plugins/lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
+        throw new Error(
+          `@release-it-plugins/lerna-changelog is configured to launch your editor but no editor was found. ` +
+            `Set the EDITOR environment variable, or set launchEditor to an explicit command (e.g. launchEditor: 'code --wait \${file}').`
         );
-        this.log.error(error.message);
-
-        throw error;
       }
 
       // `${file}` is interpolated just below

@@ -311,27 +311,39 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     let plugin = await buildPlugin({ infile, launchEditor: true });
 
+    let caughtError;
     try {
       delete process.env.EDITOR;
       process.env.PATH = '';
 
       await runTasks(plugin);
     } catch (error) {
-      expect(plugin.commands).toStrictEqual([
-        ['git describe --tags --abbrev=0', { write: false }],
-        [
-          `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
-          { write: false },
-        ],
-      ]);
-
-      expect(error.message).toEqual(
-        `@release-it-plugins/lerna-changelog configured to launch your editor but no editor was found (tried $EDITOR and searching $PATH for \`editor\`).`
-      );
+      caughtError = error;
     } finally {
       resetEDITOR();
       resetPATH();
     }
+
+    expect(caughtError).toBeDefined();
+    expect(caughtError.message).toEqual(
+      `@release-it-plugins/lerna-changelog is configured to launch your editor but no editor was found. ` +
+        `Set the EDITOR environment variable, or set launchEditor to an explicit command (e.g. launchEditor: 'code --wait \${file}').`
+    );
+
+    // the plugin must not log the error itself — release-it logs thrown errors at the
+    // top level, so logging here too would make the message appear twice (fixes #58).
+    // release-it's test util mocks `log.error` with vitest (.mock.calls) on newer
+    // versions and sinon (.callCount) on older ones, so read whichever is present.
+    let errorLogCount = plugin.log.error.mock?.calls.length ?? plugin.log.error.callCount;
+    expect(errorLogCount).toBe(0);
+
+    expect(plugin.commands).toStrictEqual([
+      ['git describe --tags --abbrev=0', { write: false }],
+      [
+        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
+        { write: false },
+      ],
+    ]);
   });
 
   test('launches configured editor, updates infile, and propogates changes to context', async () => {
