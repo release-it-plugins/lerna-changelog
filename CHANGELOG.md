@@ -5,6 +5,31 @@
 
 
 
+## v9.0.0 (2026-06-19)
+
+#### :boom: Breaking Change
+
+- [#358](https://github.com/release-it-plugins/lerna-changelog/pull/358) Align Node support with release-it; pin dev to Node 22 LTS ([@scalvert](https://github.com/scalvert))
+
+#### :rocket: Enhancement
+
+- [#339](https://github.com/release-it-plugins/lerna-changelog/pull/339) Add opt-in `prettier` option to format generated changelog (#326) ([@scalvert](https://github.com/scalvert))
+
+#### :bug: Bug Fix
+
+- [#338](https://github.com/release-it-plugins/lerna-changelog/pull/338) Fix double-logged no-editor error and improve message (#57, #58) ([@scalvert](https://github.com/scalvert))
+
+#### :house: Internal
+
+- [#357](https://github.com/release-it-plugins/lerna-changelog/pull/357) Migrate Node version management from Volta to mise ([@scalvert](https://github.com/scalvert))
+- [#341](https://github.com/release-it-plugins/lerna-changelog/pull/341) Modernize toolchain: ESLint 10 (flat config), vitest 4, release-it 20 ([@scalvert](https://github.com/scalvert))
+
+#### Committers: 1
+
+- Steve Calvert ([@scalvert](https://github.com/scalvert))
+
+
+
 ## v8.0.1 (2025-06-18)
 
 #### :rocket: Enhancement
