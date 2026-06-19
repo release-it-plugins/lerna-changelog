@@ -37,7 +37,7 @@
     "mdast-util-from-markdown": "^2.0.3",
     "tmp": "^0.2.7",
     "validate-peer-dependencies": "^2.2.0",
-    "which": "^7.0.0"
+    "which": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -81,5 +81,8 @@
     "prettier": {
       "optional": true
     }
+  },
+  "overrides": {
+    "undici": "^7.27.3"
   }
 }
