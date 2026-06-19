@@ -22,7 +22,7 @@ jobs:
         node-version: [20, 22, 24]
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4
         with:
           mise_toml: |
@@ -43,7 +43,7 @@ jobs:
           ['^17.0.0', '^18.0.0', '^19.0.0', '^20.0.0']
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: jdx/mise-action@v4
       # Resolve dependencies from scratch with the target release-it version.
       # Swapping release-it in an existing lockfile/tree can leave vitest's
