@@ -1,6 +1,5 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { createRequire } from 'module';
 import { EOL } from 'os';
 import fs from 'fs';
 import which from 'which';
@@ -9,6 +8,7 @@ import _ from 'lodash';
 import tmp from 'tmp';
 import { execaCommand } from 'execa';
 import { fromMarkdown } from 'mdast-util-from-markdown';
+import generateChangelog from './changelog.js';
 
 const template = _.template;
 const __filename = fileURLToPath(import.meta.url);
@@ -16,9 +16,6 @@ const __dirname = dirname(__filename);
 
 import validatePeerDependencies from 'validate-peer-dependencies';
 validatePeerDependencies(__dirname);
-
-const require = createRequire(import.meta.url);
-const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 
 // using a const here, because we may need to change this value in the future
 // and this makes it much simpler
@@ -33,7 +30,7 @@ function getToday() {
 export default class LernaChangelogGeneratorPlugin extends Plugin {
   async init() {
     let from = (await this.getTagForHEAD()) || (await this.getFirstCommit());
-    this.changelog = await this._execLernaChangelog(from);
+    this.changelog = await this._generateChangelog(from);
 
     // this supports release-it < 13.5.3
     this.setContext({ changelog: this.changelog });
@@ -73,15 +70,8 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
     return this._firstCommit;
   }
 
-  async _execLernaChangelog(from) {
-    let changelog = await this.exec(
-      `${process.execPath} ${LERNA_PATH} --next-version=${UNRELEASED} --from=${from}`,
-      {
-        options: { write: false },
-      }
-    );
-
-    return changelog;
+  async _generateChangelog(from) {
+    return generateChangelog({ from, nextVersion: UNRELEASED });
   }
 
   async processChangelog() {
@@ -165,7 +155,7 @@ export default class LernaChangelogGeneratorPlugin extends Plugin {
       let firstCommit = await this.getFirstCommit();
 
       if (firstCommit) {
-        changelog = await this._execLernaChangelog(firstCommit, this.nextVersion);
+        changelog = await this._generateChangelog(firstCommit);
         changelog = changelog.replace(UNRELEASED, this.nextVersion);
 
         this.debug({ changelog });
