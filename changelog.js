@@ -1,7 +1,11 @@
-// Internal reimplementation of the slice of `lerna-changelog` we relied on:
-// list commits in a range, resolve each to its GitHub PR, group by label, and
-// render markdown identical to what the old CLI produced. Monorepo
-// (`packages/*`) grouping and `lerna.json` support are intentionally dropped.
+// Adapted from lerna-changelog (https://github.com/lerna/lerna-changelog),
+// Copyright (c) 2016-2018 Bo Borgerson and contributors, MIT License.
+//
+// This internalizes the slice of lerna-changelog we relied on: list commits
+// in a range, resolve each to its GitHub PR, group by label, and render
+// markdown identical to what the old CLI produced, using native fetch instead
+// of make-fetch-happen. Monorepo (`packages/*`) grouping and `lerna.json`
+// support are intentionally dropped.
 import fs from 'fs';
 import path from 'path';
 import { execa } from 'execa';
