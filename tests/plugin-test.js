@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 import { describe, test, expect } from 'vitest';
-import { createRequire } from 'module';
 import tmp from 'tmp';
 import { factory, runTasks } from 'release-it/test/util/index.js';
 import Plugin from '../index.js';
@@ -11,9 +10,6 @@ const PATH = process.env.PATH;
 
 tmp.setGracefulCleanup();
 
-const require = createRequire(import.meta.url);
-
-const LERNA_PATH = require.resolve('lerna-changelog/bin/cli');
 const namespace = '@release-it-plugins/lerna-changelog';
 
 function resetPATH() {
@@ -51,13 +47,19 @@ class TestPlugin extends Plugin {
   constructor() {
     super(...arguments);
 
+    // shell command responses (git); the changelog itself is generated
+    // in-process via `_generateChangelog`, stubbed below.
     this.responses = {
       // always assume v1.0.0 unless specifically overridden
       'git describe --tags --abbrev=0': 'v1.0.0',
-
-      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`]:
-        '## Unreleased (2020-03-18)\n\nThe changelog',
     };
+
+    // `from` ref -> generated changelog markdown
+    this.changelogResponses = {
+      'v1.0.0': '## Unreleased (2020-03-18)\n\nThe changelog',
+    };
+
+    this.generatedFrom = [];
 
     this.commands = [];
     this.shell.execFormattedCommand = async (command, options) => {
@@ -72,6 +74,12 @@ class TestPlugin extends Plugin {
         }
       }
     };
+  }
+
+  async _generateChangelog(from) {
+    this.generatedFrom.push(from);
+
+    return this.changelogResponses[from];
   }
 
   async _launchEditor(tmpFile) {
@@ -89,18 +97,13 @@ async function buildPlugin(config = {}, _Plugin = TestPlugin) {
 }
 
 describe('@release-it-plugins/lerna-changelog', () => {
-  test('it invokes lerna-changelog', async () => {
+  test('it generates a changelog from the most recent tag', async () => {
     let plugin = await buildPlugin();
 
     await runTasks(plugin);
 
-    expect(plugin.commands).toStrictEqual([
-      ['git describe --tags --abbrev=0', { write: false }],
-      [
-        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
-        { write: false },
-      ],
-    ]);
+    expect(plugin.commands).toStrictEqual([['git describe --tags --abbrev=0', { write: false }]]);
+    expect(plugin.generatedFrom).toStrictEqual(['v1.0.0']);
   });
 
   test('it honors custom git.tagName formatting', async () => {
@@ -111,13 +114,8 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     await runTasks(plugin);
 
-    expect(plugin.commands).toStrictEqual([
-      ['git describe --tags --abbrev=0', { write: false }],
-      [
-        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
-        { write: false },
-      ],
-    ]);
+    expect(plugin.commands).toStrictEqual([['git describe --tags --abbrev=0', { write: false }]]);
+    expect(plugin.generatedFrom).toStrictEqual(['v1.0.0']);
 
     const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
     expect(changelog).toEqual(`## v1.0.1 (2020-03-18)\n\nThe changelog\n\n`);
@@ -133,12 +131,11 @@ describe('@release-it-plugins/lerna-changelog', () => {
     expect(changelog).toEqual('The changelog');
   });
 
-  test('it prints something to CHANGELOG.md when lerna-changelog returns no content', async () => {
+  test('it prints something to CHANGELOG.md when the changelog is empty', async () => {
     let infile = tmp.fileSync().name;
     let plugin = await buildPlugin({ infile });
 
-    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
-      '';
+    plugin.changelogResponses['v1.0.0'] = '';
 
     await runTasks(plugin);
 
@@ -158,16 +155,17 @@ describe('@release-it-plugins/lerna-changelog', () => {
         value: 'hahahahaah, does not exist',
       },
       'git rev-list --max-parents=0 HEAD': 'aabc',
-      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
     });
+    plugin.changelogResponses['aabc'] =
+      `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`;
 
     await runTasks(plugin);
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
       ['git rev-list --max-parents=0 HEAD', { write: false }],
-      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
     ]);
+    expect(plugin.generatedFrom).toStrictEqual(['aabc']);
 
     const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
     expect(changelog.trim()).toEqual('## v1.0.1\n\nThe changelog\n## v1.0.0\n\nThe old changelog');
@@ -182,21 +180,18 @@ describe('@release-it-plugins/lerna-changelog', () => {
 
     Object.assign(plugin.responses, {
       'git rev-list --max-parents=0 HEAD': 'aabc',
-      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`]: `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`,
     });
+    plugin.changelogResponses['aabc'] =
+      `## Unreleased\n\nThe changelog\n## v1.0.0\n\nThe old changelog`;
 
     await runTasks(plugin);
 
     expect(plugin.commands).toStrictEqual([
       ['git describe --tags --abbrev=0', { write: false }],
-      [
-        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
-        { write: false },
-      ],
       ['git rev-list --max-parents=0 HEAD', { write: false }],
-      [`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=aabc`, { write: false }],
       [`git add ${infile}`, {}],
     ]);
+    expect(plugin.generatedFrom).toStrictEqual(['v1.0.0', 'aabc']);
 
     const changelog = fs.readFileSync(infile, { encoding: 'utf8' });
     expect(changelog.trim()).toEqual('## v1.0.1\n\nThe changelog\n## v1.0.0\n\nThe old changelog');
@@ -337,13 +332,8 @@ describe('@release-it-plugins/lerna-changelog', () => {
     let errorLogCount = plugin.log.error.mock?.calls.length ?? plugin.log.error.callCount;
     expect(errorLogCount).toBe(0);
 
-    expect(plugin.commands).toStrictEqual([
-      ['git describe --tags --abbrev=0', { write: false }],
-      [
-        `${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`,
-        { write: false },
-      ],
-    ]);
+    expect(plugin.commands).toStrictEqual([['git describe --tags --abbrev=0', { write: false }]]);
+    expect(plugin.generatedFrom).toStrictEqual(['v1.0.0']);
   });
 
   test('formats changelog with prettier when prettier option is true', async () => {
@@ -352,8 +342,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
     // use * list markers which prettier normalizes to -
-    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
-      '## Unreleased (2020-03-18)\n\n* item one\n* item two';
+    plugin.changelogResponses['v1.0.0'] = '## Unreleased (2020-03-18)\n\n* item one\n* item two';
 
     await runTasks(plugin);
 
@@ -366,8 +355,7 @@ describe('@release-it-plugins/lerna-changelog', () => {
     let plugin = await buildPlugin({ infile });
     plugin.config.setContext({ git: { tagName: 'v${version}' } });
 
-    plugin.responses[`${process.execPath} ${LERNA_PATH} --next-version=Unreleased --from=v1.0.0`] =
-      '## Unreleased (2020-03-18)\n\n* item one\n* item two';
+    plugin.changelogResponses['v1.0.0'] = '## Unreleased (2020-03-18)\n\n* item one\n* item two';
 
     await runTasks(plugin);
 

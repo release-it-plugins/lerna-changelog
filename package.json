@@ -23,6 +23,7 @@
   "main": "index.js",
   "files": [
     "index.js",
+    "changelog.js",
     "cjs-wrapper.cjs"
   ],
   "scripts": {
@@ -32,9 +33,10 @@
   },
   "dependencies": {
     "execa": "^9.6.1",
-    "lerna-changelog": "^2.2.0",
+    "hosted-git-info": "^9.0.3",
     "lodash": "^4.18.1",
     "mdast-util-from-markdown": "^2.0.3",
+    "p-map": "^7.0.4",
     "tmp": "^0.2.7",
     "validate-peer-dependencies": "^2.2.0",
     "which": "^6.0.1"
