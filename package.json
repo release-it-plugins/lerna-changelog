@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "execa": "^9.6.1",
-    "hosted-git-info": "^9.0.3",
+    "hosted-git-info": "^10.1.1",
     "lodash": "^4.18.1",
     "mdast-util-from-markdown": "^2.0.3",
     "p-map": "^7.0.4",
