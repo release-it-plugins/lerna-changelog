@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - uses: jdx/mise-action@v4
+      - uses: jdx/mise-action@v4.2.3
         with:
           mise_toml: |
             [tools]
@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - uses: jdx/mise-action@v4
+      - uses: jdx/mise-action@v4.2.3
       # Resolve dependencies from scratch with the target release-it version.
       # Swapping release-it in an existing lockfile/tree can leave vitest's
       # optional native rolldown binary uninstalled; a clean resolution (on the
