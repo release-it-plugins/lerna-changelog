@@ -42,6 +42,16 @@ Or via `.release-it.json`:
 }
 ```
 
+## Compatibility
+
+This plugin supports `release-it` versions 17, 18, 19, 20, and 21. The
+supported Node.js versions are `^20.19.0`, `^22.13.0`, and `>=24.0.0`, as
+specified by the package `engines` field.
+
+`release-it@21` has a stricter Node.js requirement of `^22.21.0 || >=24.0.0`.
+Use `release-it@20` or earlier when running on Node.js 20 or on an earlier Node.js
+22 release.
+
 ## Configuration
 
 `@release-it-plugins/lerna-changelog` supports one configuration option, `infile`. When
